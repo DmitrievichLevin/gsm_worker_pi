@@ -1,0 +1,22 @@
+name: Deploy Python Lambda
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.py' # Change to the file extension of the language that you are using.
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Deploy Modified Files
+        run: |
+          cd src
+          cp -r ./media_microservice ./lambda
+          cd lambda
+          zip -r ../media_microservice_lambda.zip .
