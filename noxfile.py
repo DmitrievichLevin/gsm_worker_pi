@@ -23,6 +23,7 @@ package = "media_microservice"
 python_versions = ["3.11"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
+    "export-requirements",
     "pre-commit",
     "mypy",
     "tests",
@@ -81,6 +82,14 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
         hook.write_text("\n".join(lines))
 
 
+@session(name="export-requirements", python="3.11")
+def exportreqs(session: Session) -> None:
+    """Export Requirements."""
+    args = ["export", "-f", "requirements.txt", "--output", "requirements.txt", "--without-hashes"]
+
+    session.run("poetry", *args)
+
+
 @session(name="pre-commit", python=python_versions)
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
@@ -101,6 +110,7 @@ def precommit(session: Session) -> None:
         "pre-commit-hooks",
         "reorder-python-imports",
     )
+
     session.run("pre-commit", *args)
     if args and args[0] == "install":
         activate_virtualenv_in_precommit_hooks(session)
