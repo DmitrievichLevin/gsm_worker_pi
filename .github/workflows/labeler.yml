@@ -13,7 +13,7 @@ jobs:
       - name: Check CWD
         run: |
           echo "$PWD"
-          echo ls
+          ls
 
       - name: Run Labeler
         uses: crazy-max/ghaction-github-labeler@v5
