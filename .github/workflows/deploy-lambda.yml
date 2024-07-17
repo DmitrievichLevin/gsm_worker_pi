@@ -6,8 +6,6 @@ on:
       - prod
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  ROLE: ${{ secrets.AWS_ROLE }}
-  REGION: ${{ secrets.AWS_REGION }}
 permissions:
   contents: write
 jobs:
