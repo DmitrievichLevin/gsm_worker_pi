@@ -45,8 +45,8 @@ BEGIN
     -- Guarentees Existing User
     INSERT INTO media
         (id, user_id, bucket, doc, doc_path, file_ext, file_size, thumb_size, created_at)
-    OUTPUT 
-        INSERTED.*, UNIX_TIMESTAMP(INSERTED.created_at) AS created_at 
+    OUTPUT
+        INSERTED.*, UNIX_TIMESTAMP(INSERTED.created_at) AS created_at
         INTO #newMedia
     VALUES(@id, @user_id, @bucket, @doc, @doc_path, @file_ext, @file_size, @thumb_size, CURRENT_TIMESTAMP)
 

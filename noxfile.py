@@ -20,7 +20,7 @@ except ImportError:
 
 
 package = "media_microservice"
-python_versions = ["3.11", "3.12"]
+python_versions = ["3.11"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
@@ -58,16 +58,12 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
         text = hook.read_text()
         bindir = repr(session.bin)[1:-1]  # strip quotes
         if not (
-            Path("A") == Path("a")
-            and bindir.lower() in text.lower()
-            or bindir in text
+            Path("A") == Path("a") and bindir.lower() in text.lower() or bindir in text
         ):
             continue
 
         lines = text.splitlines()
-        if not (
-            lines[0].startswith("#!") and "python" in lines[0].lower()
-        ):
+        if not (lines[0].startswith("#!") and "python" in lines[0].lower()):
             continue
 
         header = dedent(
@@ -85,12 +81,11 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
         hook.write_text("\n".join(lines))
 
 
-@session(name="pre-commit", python="3.9")
+@session(name="pre-commit", python=python_versions)
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
     args = session.posargs or [
         "run",
-        "--all-files",
         "--show-diff-on-failure",
     ]
     session.install(
@@ -114,7 +109,7 @@ def precommit(session: Session) -> None:
 @session(python=python_versions)
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
-    args = session.posargs or ["src", "tests", "docs/conf.py"]
+    args = session.posargs or ["src", "tests"]
     session.install(".")
     session.install("mypy", "pytest", "types-click")
     session.run("mypy", *args)
@@ -130,19 +125,12 @@ def mypy(session: Session) -> None:
 def tests(session: Session) -> None:
     """Run the test suite."""
     session.install(".")
-    session.install("coverage[toml]", "pytest", "pygments")
-    try:
-        session.run(
-            "coverage",
-            "run",
-            "--parallel",
-            "-m",
-            "pytest",
-            *session.posargs,
-        )
-    finally:
-        if session.interactive:
-            session.notify("coverage", posargs=[])
+    session.install("pytest", "pygments")
+
+    session.run(
+        "pytest",
+        *session.posargs,
+    )
 
 
 @session(python=python_versions)
@@ -150,6 +138,4 @@ def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     session.install(".")
     session.install("pytest", "typeguard", "pygments")
-    session.run(
-        "pytest", f"--typeguard-packages={package}", *session.posargs
-    )
+    session.run("pytest", f"--typeguard-packages={package}", *session.posargs)

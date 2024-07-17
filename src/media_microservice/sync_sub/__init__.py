@@ -1,7 +1,7 @@
 """Sub Process Sync Module"""
+from .meta_proc import MetaProcess
+from .s3_proc import S3Process
+from .sub_process_interface import SubProcess
+from .sub_process_interface import Sync
 
-from .sub_process_interface import Sync, SubProcess
-from .s3_proc import S3_Process
-from .meta_proc import Meta_Process
-
-__all__ = ["Sync", "SubProcess", "S3_Process", "Meta_Process"]
+__all__ = ["Sync", "SubProcess", "S3Process", "MetaProcess"]

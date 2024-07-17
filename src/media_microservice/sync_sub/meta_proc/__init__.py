@@ -1,4 +1,4 @@
 """SQL Process Module & Utils"""
-from .meta_process import Meta_Process
+from .meta_process import MetaProcess
 
-__all__ = ['Meta_Process']
+__all__ = ["MetaProcess"]

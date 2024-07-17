@@ -31,7 +31,7 @@ jobs:
           cd ..
 
           # Upload the updated zip to S3
-          aws s3 cp media_microservice_lambda.zip s3://${{ secrets.AWS_BUCKET }}/${{ secrets.MICRO_SV_KEY }}
+          aws s3 cp media_microservice_lambda.zip s3://${{ secrets.AWS_BUCKET }}/${{ secrets.MICRO_SV_KEY }}.zip
 
           rm -r lambda
           rm media_microservice_lambda.zip

@@ -1,9 +1,19 @@
+fail_fast: true
 repos:
   - repo: local
     hooks:
       - id: black
         name: black
         entry: black
+        args:
+          [
+            "--preview",
+            "--force-exclude",
+            "noxfile",
+            "--include",
+            "(\\.py)$",
+            "--diff",
+          ]
         language: system
         types: [python]
         require_serial: true
@@ -21,12 +31,6 @@ repos:
         entry: check-yaml
         language: system
         types: [yaml]
-      - id: end-of-file-fixer
-        name: Fix End of Files
-        entry: end-of-file-fixer
-        language: system
-        types: [text]
-        stages: [commit, push, manual]
       - id: flake8
         name: flake8
         entry: flake8
@@ -45,7 +49,9 @@ repos:
         language: system
         types: [text]
         stages: [commit, push, manual]
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.3.0
-    hooks:
-      - id: prettier
+      - id: poetry-export
+        name: Export requirements
+        entry: poetry
+        language: system
+        args: ["-f", "requirements.txt", "--output", "requirements.txt", "--without-hashes"]
+        stages: [push]

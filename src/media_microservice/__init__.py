@@ -1,7 +1,9 @@
 """Media_Lambda."""
+from .media import LambdaEvent
+from .media import Media
+from .sync_sub import MetaProcess
+from .sync_sub import S3Process
+from .sync_sub import SubProcess
+from .sync_sub import Sync
 
-from .media import Media, LambdaEvent
-from sync_sub import Sync, SubProcess, S3_Process, Meta_Process
-
-__all__ = ['Media', 'LambdaEvent', 'Sync',
-           'SubProcess', 'S3_Process', 'Meta_Process']
+__all__ = ["Media", "LambdaEvent", "Sync", "SubProcess", "S3Process", "MetaProcess"]

@@ -1,14 +1,20 @@
 """Media Deserializer"""
-
-import sys
 import base64
+import sys
 import uuid
 from io import BytesIO
-from typing import Any, Callable, Generator, Generic, TypeVar, Union
-import multipart as mp
-from PIL import Image as Pil, ImageFile
-import pillow_heif
+from typing import Any
+from typing import Callable
+from typing import Generator
+from typing import Generic
+from typing import TypeVar
+from typing import Union
+
 import filetype as ft
+import multipart as mp
+import pillow_heif
+from PIL import Image as Pil
+from PIL import ImageFile
 
 BASE: int = 1800
 THUMB: int = 500
@@ -33,6 +39,7 @@ class Media(Generic[MediaProp]):
     Yields:
         _type_: _description_
     """
+
     id: uuid.UUID
     format: MediaProp
     user: MediaProp
@@ -48,10 +55,10 @@ class Media(Generic[MediaProp]):
 
     length: int = 0
     allowed_extensions: dict[Any, Any] = {
-        'jpeg': 'jpg',
-        'png': 'png',
+        "jpeg": "jpg",
+        "png": "png",
         # Convert HEIC to JPEG
-        'heic': 'jpg'
+        "heic": "jpg",
     }
 
     def __init__(self, event: LambdaEvent):
@@ -76,9 +83,11 @@ class Media(Generic[MediaProp]):
         Args:
             _type (str): content-type header
             _len (int): length of body
-            body (str): body
-        """
+            body_str (str): body
 
+        Raises:
+            TypeError: Mime no currently supported.
+        """
         body = BytesIO(base64.b64decode(body_str))
 
         # Get Boundary & size
@@ -102,12 +111,9 @@ class Media(Generic[MediaProp]):
             case "image":
                 self._process_img(raw, extension)
             case _:
-                raise TypeError(
-                    f"Expected image, but found {mime}."
-                )
+                raise TypeError(f"Expected image, but found {mime}.")
 
     def _process_img(self, bts: BytesIO, extension: MediaProp) -> None:
-
         # For HEIC
         pillow_heif.register_heif_opener()
 
@@ -115,10 +121,8 @@ class Media(Generic[MediaProp]):
 
         try:
             self.format = self.allowed_extensions[extension]
-        except Exception:
-            raise TypeError(
-                f"File extension not supported {extension}"
-            )
+        except Exception as e:
+            raise TypeError(f"File extension not supported {extension}") from e
 
         # Resize Image to correct dimensions if applicable
         if img.width > BASE or img.height > BASE:
@@ -166,15 +170,19 @@ class Media(Generic[MediaProp]):
             Generator[MediaProp | int | uuid.UUID, None, None]: _description_
         """
         properties: list[MediaProp | int | uuid.UUID] = [
-            self.id, self.user, self.format, self.length]
+            self.id,
+            self.user,
+            self.format,
+            self.length,
+        ]
         for value in properties:
             yield value
 
     @classmethod
     def _resize(cls, image: ImageFile.ImageFile) -> Image:
-        pct: Callable[[int, float | int], int] = lambda key, x: int(float(image.size[key]) * (
-            BASE / float(x)
-        ))
+        pct: Callable[[int, float | int], int] = lambda key, x: int(
+            float(image.size[key]) * (BASE / float(x))
+        )
 
         new_size: tuple[int, int] = (
             (BASE, pct(0, image.height))
@@ -182,23 +190,17 @@ class Media(Generic[MediaProp]):
             else (pct(1, image.width), BASE)
         )
 
-        resized_image = image.resize(
-            new_size, Pil.Resampling.NEAREST
-        )
+        resized_image = image.resize(new_size, Pil.Resampling.NEAREST)
 
         image.close()
         return resized_image
 
-    def _pdict(
-        self, _type: str, _len: int
-    ) -> tuple[MediaProp, int]:
+    def _pdict(self, _type: str, _len: int) -> tuple[MediaProp, int]:
         ctype, pdict = mp.parse_options_header(_type)
 
         boundary: MediaProp = pdict["boundary"]
 
         if ctype != "multipart/form-data":
-            raise TypeError(
-                f"Expected multipart/form-data, but found {ctype}"
-            )
+            raise TypeError(f"Expected multipart/form-data, but found {ctype}")
         else:
             return boundary, _len

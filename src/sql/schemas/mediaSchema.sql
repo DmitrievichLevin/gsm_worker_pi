@@ -2,7 +2,7 @@ CREATE TABLE media
 (
     -- S3 Key
     id VARCHAR(255) NOT NULL PRIMARY KEY,
-    -- S3 Dir (User ID)  
+    -- S3 Dir (User ID)
     user_id VARCHAR(255) NOT NULL,
     -- S3 Bucket
     bucket VARCHAR(255) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE media
     file_size BIGINT NOT NULL,
     -- Thumbnail
     thumb_size BIGINT NOT NULL,
-    -- 
+    --
     created_at TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id),
     -- Index Mongo Doc For Optimized Query on Document Media

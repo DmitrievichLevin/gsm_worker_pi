@@ -1,8 +1,10 @@
 """Syncronized 'Fail-fast' Subprocess builder"""
-
 from __future__ import annotations
-from abc import abstractmethod, ABCMeta
-from typing import Any, Type
+
+from abc import ABCMeta
+from abc import abstractmethod
+from typing import Any
+from typing import Type
 
 LambdaEvent = dict[str, Any]
 
@@ -14,6 +16,7 @@ class SubProcess(metaclass=ABCMeta):
         event(LambdaEvent): Lambda Event.
         deps(dict[str, Any]): Result of former SubProcess(s).
     """
+
     deps: dict[str, Any]
     event: LambdaEvent
 
@@ -38,6 +41,7 @@ class Sync:
     Raises:
         e: Arbitrary exception thrown by SubProcess execution.
     """
+
     services: list[Type[SubProcess]] = []
     # Result of Synchronized Process(s)
     result: dict[str, Any] = {}
@@ -51,6 +55,9 @@ class Sync:
 
         Args:
             service (Type[SubProcess[R]]): SubProcess Child Class.
+
+        Returns:
+            sync(Sync): self
         """
         self.services.append(service)
 
@@ -65,10 +72,13 @@ class Sync:
         """Execute SubProcess(s)
 
         Args:
-            deps (dict[str, Any]): dictionary of values to-be mutated by SubProcess(s).
+            event (LambdaEvent): Lambda Event.
+
+        Returns:
+            result(dict[str, Any]): Result of subprocess(s).
 
         Raises:
-            e: _description_
+            Exception: Error while executing SubProcess(s).
         """
         executed = []
         for s in self.services:
