@@ -49,4 +49,3 @@ repos:
         language: system
         types: [text]
         stages: [commit, push, manual]
-
