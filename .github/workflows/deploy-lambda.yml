@@ -20,9 +20,9 @@ jobs:
         id: creds
         uses: aws-actions/configure-aws-credentials@v1.7.0
         with:
-          role-to-assume: ${{ env.ROLE }}
+          role-to-assume: arn:aws:iam::199195409647:role/media_micro_role
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
-          aws-region: ${{ env.REGION }}
+          aws-region: us-west-1
 
       - name: Sts GetCallerIdentity
         run: |
