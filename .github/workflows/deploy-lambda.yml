@@ -22,11 +22,9 @@ jobs:
           role-to-assume: arn:aws:iam::199195409647:role/media_micro_role
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-west-1
-
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
-
       - name: Deploy Modified Files
         run: |
           cd src
