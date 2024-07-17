@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: configure aws credentials
         id: creds
-        uses: aws-actions/configure-aws-credentials@v1.7.0
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::199195409647:role/media_micro_role
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
