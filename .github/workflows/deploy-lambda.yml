@@ -25,7 +25,8 @@ jobs:
       - name: Deploy Modified Files
         run: |
           cd src
-          cp -r ./media_microservice ./lambda/media_microservice
+          mkdir lambda
+          cp -r ./media_microservice ./lambda/${{ secrets.MICRO_SV_KEY }}
           cd lambda
           zip -r ../media_microservice_lambda.zip .
           cd ..
