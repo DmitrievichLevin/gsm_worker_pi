@@ -22,7 +22,10 @@ class S3Process(SubProcess):
 
     def __init__(self, event: dict[str, Any], deps: dict[str, Any]) -> None:
         super().__init__(event, deps)
-        self.deps["media"] = Media(event)
+        media: Any = Media(event)
+        self.deps["media"] = media
+        self.deps['owner'] = media.user
+        self.deps['id'] = media.id
 
     @property
     def sub_dir(self) -> str:
