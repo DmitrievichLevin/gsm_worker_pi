@@ -1,10 +1,10 @@
 """Lambda Handler"""
 from typing import Any
 
-from media_microservice import LambdaEvent
-from media_microservice import MetaProcess
-from media_microservice import S3Process
-from media_microservice import Sync
+from .media import LambdaEvent
+from .meta_proc import MetaProcess
+from .s3_proc import S3Process
+from .sync_sub import Sync
 
 
 def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
