@@ -2,6 +2,11 @@
 # pylint: disable=unused-import
 import pytest
 
+from media_microservice import LambdaEvent
+from media_microservice import MetaProcess
+from media_microservice import S3Process
+from media_microservice import Sync
+
 
 def test_placeholder() -> None:
     """Test Place Holder"""

@@ -7,8 +7,8 @@ from typing import Any
 import boto3
 from mypy_boto3_s3 import S3Client
 
-from media_microservice.media import Media
-from media_microservice.sync_sub import SubProcess
+from ...media import Media
+from ...sync_sub import SubProcess
 
 
 s3: S3Client = boto3.client("s3")

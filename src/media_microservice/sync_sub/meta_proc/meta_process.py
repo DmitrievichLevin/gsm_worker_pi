@@ -6,7 +6,7 @@ from typing import Any
 
 import pymssql
 
-from media_microservice.sync_sub import SubProcess
+from ...sync_sub import SubProcess
 
 
 class MetaProcess(SubProcess):
