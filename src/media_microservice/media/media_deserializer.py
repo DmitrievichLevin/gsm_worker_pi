@@ -55,10 +55,10 @@ class Media(Generic[MediaProp]):
 
     length: int = 0
     allowed_extensions: dict[Any, Any] = {
-        "jpeg": "jpg",
+        "jpeg": "jpeg",
         "png": "png",
         # Convert HEIC to JPEG
-        "heic": "jpg",
+        "heic": "jpeg",
     }
 
     def __init__(self, event: LambdaEvent):
@@ -95,9 +95,9 @@ class Media(Generic[MediaProp]):
 
         multipart = mp.MultipartParser(body, boundary, memfile_limit)
 
-        raw = BytesIO(multipart.get("file")[0])
+        raw = BytesIO(multipart.get("file").file.read())
 
-        user_id = multipart.get("id")[0]
+        user_id = multipart.get("id").value
 
         self.id = uuid.uuid4()
 
