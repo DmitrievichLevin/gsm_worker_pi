@@ -1,5 +1,6 @@
 """Place Holder (Code 5)"""
 # pylint: disable=unused-import
+# pylint: disable=import-error
 import pytest
 
 from media_microservice import LambdaEvent

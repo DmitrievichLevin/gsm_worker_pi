@@ -82,7 +82,7 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
         hook.write_text("\n".join(lines))
 
 
-@session(name="export-requirements", python="3.11")
+@session(name="export-requirements", python="3.10")
 def exportreqs(session: Session) -> None:
     """Export Requirements."""
     args = ["export", "-f", "requirements.txt", "--output", "requirements.txt", "--without-hashes"]

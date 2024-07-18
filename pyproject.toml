@@ -9,8 +9,8 @@ homepage = "https://github.com/dmitrievichlevin/media_lambda"
 repository = "https://github.com/dmitrievichlevin/media_lambda"
 packages = [{ include = "media_microservice", from = "src" }]
 classifiers = [
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
 ]
 
 [tool.poetry.urls]
