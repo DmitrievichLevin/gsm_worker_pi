@@ -6,16 +6,16 @@ from typing import Any
 
 import pymssql
 
-from ...sync_sub import SubProcess
+from ..sync_sub import SubProcess
 
 
 class MetaProcess(SubProcess):
     """Insert New Media metadata Row"""
 
-    host = os.environ["sql_host"] or "bevor-server.database.windows.net"
-    uname = os.environ["sql_uname"] or "bevor_dev"
-    pword = os.environ["sql_pword"] or "minuteRice@1234$"
-    db = os.environ["sql_db"] or "bevor_dir"
+    host = os.environ.get("sql_host") or "bevor-server.database.windows.net"
+    uname = os.environ.get("sql_uname") or "bevor_dev"
+    pword = os.environ.get("sql_pword") or "minuteRice@1234$"
+    db = os.environ.get("sql_db") or "bevor_dir"
     cursor: pymssql.Cursor
     connection: pymssql.Connection
 

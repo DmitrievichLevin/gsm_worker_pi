@@ -7,8 +7,8 @@ from typing import Any
 import boto3
 from mypy_boto3_s3 import S3Client
 
-from ...media import Media
-from ...sync_sub import SubProcess
+from ..media import Media
+from ..sync_sub import SubProcess
 
 
 s3: S3Client = boto3.client("s3")
@@ -17,7 +17,7 @@ s3: S3Client = boto3.client("s3")
 class S3Process(SubProcess):
     """AWS S3 Media Upload Process"""
 
-    bucket: str = os.environ["AWS_BUCKET"] or "bevor-dev"
+    bucket: str = os.environ.get("AWS_BUCKET") or "bevor-dev"
     completed: list[str] = []
 
     def __init__(self, event: dict[str, Any], deps: dict[str, Any]) -> None:

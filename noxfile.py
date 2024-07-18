@@ -20,7 +20,7 @@ except ImportError:
 
 
 package = "media_microservice"
-python_versions = ["3.11"]
+python_versions = ["3.10"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "export-requirements",
@@ -70,8 +70,8 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
         header = dedent(
             f"""\
             import os
-            os.environ["VIRTUAL_ENV"] = {virtualenv!r}
-            os.environ["PATH"] = os.pathsep.join((
+            os.environ.get("VIRTUAL_ENV"] = {virtualenv!r}
+            os.environ.get("PATH"] = os.pathsep.join((
                 {session.bin!r},
                 os.environ.get("PATH", ""),
             ))
