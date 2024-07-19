@@ -13,24 +13,35 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
 
     match (method):
         case "POST":
-            sync_proc: Sync = Sync().add(S3Process).add(MetaProcess)
+            try:
+                sync_proc: Sync = Sync().add(S3Process).add(MetaProcess)
 
-            result = sync_proc.execute(event)
+                result = sync_proc.execute(event)
 
-            body = {
-                "url": result["image_url"],
-                "thumbnail": result["thumb_url"],
-                "metadata": result["metadata"],
-            }
+                body = {
+                    "url": result["image_url"],
+                    "thumbnail": result["thumb_url"],
+                    "metadata": result["metadata"],
+                }
 
-            return {
-                "statusCode": 200,
-                "headers": {
-                    "Access-Control-Allow-Headers": "Content-Type",
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-                },
-                "body": body,
-            }
+                return {
+                    "statusCode": 200,
+                    "headers": {
+                        "Access-Control-Allow-Headers": "Content-Type",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                    },
+                    "body": body,
+                }
+            except Exception as e:
+                return {
+                    "statusCode": 500,
+                    "headers": {
+                        "Access-Control-Allow-Headers": "Content-Type",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                    },
+                    "body": f"{e}",
+                }
         case _:
             return {"statusCode": 405, "body": {"message": f"{method} Not Allowed."}}
