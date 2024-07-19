@@ -1,9 +1,11 @@
 name: Deploy Python Lambda
 
 on:
-  push:
-    branches:
-      - prod
+  workflow_run:
+    workflows: [tests]
+    types:
+      - completed
+    branches: [prod]
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 permissions:
@@ -12,7 +14,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - name: configure aws credentials
