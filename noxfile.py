@@ -136,10 +136,10 @@ def tests(session: Session) -> None:
     """Run the test suite."""
     session.install(".")
     session.install("pytest", "pygments")
-
+    args = ["-s"]
     session.run(
         "pytest",
-        *session.posargs,
+        *args,
     )
 
 

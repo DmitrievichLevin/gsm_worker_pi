@@ -43,6 +43,9 @@ class Media(Generic[MediaProp]):
     id: uuid.UUID
     format: MediaProp
     user: MediaProp
+    doc: MediaProp
+    doc_id: MediaProp
+    doc_path: MediaProp
     # ----Files----
     image: bytes
     thumbnail: bytes
@@ -99,9 +102,22 @@ class Media(Generic[MediaProp]):
 
         user_id = multipart.get("id").value
 
-        self.id = uuid.uuid4()
+        doc = multipart.get("doc").value
+
+        doc_id = multipart.get("doc_id").value
+
+        doc_path = multipart.get("doc_path").value
+
+        # Create Media Procedure Params
+        self.id = str(uuid.uuid4())  # type: ignore[assignment]
 
         self.user = user_id
+
+        self.doc = doc
+
+        self.doc_id = doc_id
+
+        self.doc_path = doc_path
 
         mime, extension = (lambda x: [None, None] if x is None else x.split("/"))(
             ft.guess_mime(raw)

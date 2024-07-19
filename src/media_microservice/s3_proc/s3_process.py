@@ -11,9 +11,6 @@ from ..media import Media
 from ..sync_sub import SubProcess
 
 
-s3: S3Client = boto3.client("s3")
-
-
 class S3Process(SubProcess):
     """AWS S3 Media Upload Process"""
 
@@ -25,7 +22,13 @@ class S3Process(SubProcess):
         media: Any = Media(event)
         self.deps["media"] = media
         self.deps['owner'] = media.user
+
+        # Create Media Procedure Params
         self.deps['id'] = media.id
+        self.deps['doc'] = media.doc
+        self.deps['doc_id'] = media.doc_id
+        self.deps['doc_path'] = media.doc_path
+        self.s3: S3Client = boto3.client("s3")
 
     @property
     def sub_dir(self) -> str:
@@ -111,7 +114,7 @@ class S3Process(SubProcess):
         Returns:
             str: presigned-url
         """
-        response = s3.generate_presigned_url(
+        response = self.s3.generate_presigned_url(
             ClientMethod="get_object",
             Params={
                 "Bucket": self.bucket,
@@ -132,7 +135,7 @@ class S3Process(SubProcess):
         _args = self.bucket_args(_media)
 
         for field, k, b in _args:
-            s3.put_object(Bucket=self.bucket, Key=k, Body=b)
+            self.s3.put_object(Bucket=self.bucket, Key=k, Body=b)
 
             # Update deps w/ presigned url of newly added media
             self.deps[field + "_url"] = self.presigned_url_get(k)
@@ -154,6 +157,6 @@ class S3Process(SubProcess):
         """Rollback All SubProcesses"""
         for k in self.completed:
             try:
-                s3.delete_object(Bucket=self.bucket, Key=k)
+                self.s3.delete_object(Bucket=self.bucket, Key=k)
             except Exception as e:
                 raise e
