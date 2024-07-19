@@ -18,5 +18,4 @@ from media_microservice import Sync
 def test_media_deserializer_jpeg() -> None:
     """Test Place Holder"""
     t = Media(TEvent)
-    raise Exception()
     assert t.format == "jpeg"
