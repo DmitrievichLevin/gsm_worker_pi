@@ -24,6 +24,15 @@ def test_media_deserializer_jpeg(monkeypatch) -> None:
     monkeypatch.setattr(pymssql, "connect", lambda *_args: BogusSQL(*_args))
 
     t = lambda_handler(TEvent, None)
+
+    _id = t['body']['id']
     meta = t['body']['metadata']
 
-    assert all([v == meta[k] for k, v in BogusSQL.inserted.items()])
+    # Check id
+    assert _id == BogusSQL.inserted['id']
+
+    # Check metadata for correct entries
+    assert [k in ["parent", "owner", "parentId", "path", "type", "created_at", "size"] for k in meta.keys()]
+
+    # Check size of image
+    assert meta['size'] == BogusSQL.inserted['file_size']

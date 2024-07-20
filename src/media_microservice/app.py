@@ -1,6 +1,7 @@
 """Lambda Handler"""
 from typing import Any
 
+from .formatters import MediaResponse
 from .media import LambdaEvent
 from .meta_proc import MetaProcess
 from .s3_proc import S3Process
@@ -18,11 +19,7 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
 
                 result = sync_proc.execute(event)
 
-                body = {
-                    "url": result["image_url"],
-                    "thumbnail": result["thumb_url"],
-                    "metadata": result["metadata"],
-                }
+                body = MediaResponse.format(result)
 
                 return {
                     "statusCode": 200,
@@ -41,7 +38,7 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
                         "Access-Control-Allow-Origin": "*",
                         "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
                     },
-                    "body": f"{e}",
+                    "body": {'message': f"{e}"},
                 }
         case _:
             return {"statusCode": 405, "body": {"message": f"{method} Not Allowed."}}

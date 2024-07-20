@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "media_lambda"
-version = "0.1.2"
+version = "0.1.3"
 description = "Media_Lambda"
 authors = ["Dmitrievich Levin <dmitrievichlevin@users.noreply.github.com>"]
 license = "MIT"
