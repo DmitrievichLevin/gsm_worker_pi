@@ -19,7 +19,7 @@ class DocumentProcess(SubProcess):
         super().__init__(event, deps)
         uri = os.environ.get("MONGO_URI")
         db_name = os.environ.get("MONGO_DB_NAME")
-        self.connection = pymongo.MongoClient(host=uri).get_database(db_name)
+        self.connection = pymongo.MongoClient(uri, uuidRepresentation="standard").get_database(db_name)
 
     def execute(self) -> None:
         """Parent Document Update
@@ -29,11 +29,8 @@ class DocumentProcess(SubProcess):
         """
         _id, doc, doc_path, doc_id = itemgetter("id", "doc", "doc_path", "doc_id")(self.deps['metadata'])
 
-        _id = uuid.UUID(_id)
-
-        collection = self.connection[doc]
-
-        found = collection.find_one_and_update({'id': _id}, {'$set': {f"{doc_path}": _id}})
+        found = self.connection[doc].find_one_and_update(
+            {'id': uuid.UUID(doc_id)}, {'$set': {f"{doc_path}": uuid.UUID(_id)}}, return_document=pymongo.ReturnDocument.AFTER)
 
         if not found:
             raise KeyError(f"Expected {doc} Document id:{doc_id}, but found none.")
