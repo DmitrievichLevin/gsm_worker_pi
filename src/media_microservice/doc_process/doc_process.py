@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import os
-import uuid
 from operator import itemgetter
 from typing import Any
 
@@ -30,7 +29,7 @@ class DocumentProcess(SubProcess):
         _id, doc, doc_path, doc_id = itemgetter("id", "doc", "doc_path", "doc_id")(self.deps['metadata'])
 
         found = self.connection[doc].find_one_and_update(
-            {'id': uuid.UUID(doc_id)}, {'$set': {f"{doc_path}": uuid.UUID(_id)}}, return_document=pymongo.ReturnDocument.AFTER)
+            {'id': doc_id}, {'$set': {f"{doc_path}": _id}}, return_document=pymongo.ReturnDocument.AFTER)
 
         if not found:
             raise KeyError(f"Expected {doc} Document id:{doc_id}, but found none.")
