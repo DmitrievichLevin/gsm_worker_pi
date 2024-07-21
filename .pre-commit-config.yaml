@@ -49,3 +49,16 @@ repos:
         language: system
         types: [text]
         stages: [commit, push, manual]
+      - id: export-requirements
+        name: Export Requirements
+        entry: poetry export
+        language: system
+        types: [python]
+        args:
+          [
+            "-f",
+            "requirements.txt",
+            "--output",
+            "requirements.txt",
+            "--without-hashes",
+          ]
