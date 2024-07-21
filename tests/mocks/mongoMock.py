@@ -13,11 +13,7 @@ class BogusMongo:
         """Mock getitem"""
         return self
 
-    def objects(self, *_args: Any, **_kwargs: Any) -> Any:
-        """Mock mongoengine query"""
-        return self
-
-    def update(self, *_args: Any, **_kwargs: Any) -> Any:
+    def find_one_and_update(self, *_args: Any, **_kwargs: Any) -> Any:
         """Mock mongoengine update"""
         pass
 

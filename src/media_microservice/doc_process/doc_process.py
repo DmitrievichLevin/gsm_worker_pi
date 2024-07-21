@@ -5,8 +5,7 @@ import os
 from operator import itemgetter
 from typing import Any
 
-import mongoengine
-from mongoengine import Document
+from pymongo import MongoClient
 
 from ..sync_sub import SubProcess
 
@@ -15,11 +14,12 @@ os.environ['MONGO_URI'] = "mongodb+srv://bev-dev:MPndTl0nQjPL7a4z@bevor-dev.uma4
 
 class DocumentProcess(SubProcess):
     """Attach Uploaded Media to Parent Document"""
+    connection: Any
 
     def __init__(self, event: dict[str, Any], deps: dict[str, Any]) -> None:
         super().__init__(event, deps)
         uri = os.environ.get("MONGO_URI")
-        self.connection = mongoengine.connect(host=uri)
+        self.connection = MongoClient(host=uri)
 
     def execute(self) -> None:
         """Parent Document Update
@@ -29,14 +29,12 @@ class DocumentProcess(SubProcess):
         """
         _id, doc, doc_path, doc_id = itemgetter("id", "doc", "doc_path", "doc_id")(self.deps['metadata'])
 
-        document: Document = self.connection[doc]
+        collection = self.connection[doc]
 
-        with document.objects(id=doc_id) as found:
-            print("track found", found)
+        with collection.find_one_and_update({'id': _id}, {'$set': {f"{doc_path}": _id}}) as found:
+
             if not found:
                 raise KeyError(f"Expected {doc} Document id:{doc_id}, but found none.")
-
-            found.update(__raw__={'$set': {f"{doc_path}": _id}})
 
     def rollback(self) -> None:
         """No Rollback."""
