@@ -7,6 +7,7 @@ import os
 
 from .lamb_data import TEvent
 from .mocks.botoMock import BogoClient
+from .mocks.mongoMock import BogusMongo
 from .mocks.pymssqlMock import BogusSQL
 
 
@@ -19,9 +20,11 @@ def test_media_deserializer_jpeg(monkeypatch) -> None:
     os.environ["AWS_BUCKET"] = "bevor-media"
     import boto3
     import pymssql
+    import mongoengine
     from media_microservice.app import lambda_handler
     monkeypatch.setattr(boto3, "client", lambda x: BogoClient(x))
     monkeypatch.setattr(pymssql, "connect", lambda *_args: BogusSQL(*_args))
+    monkeypatch.setattr(mongoengine, "connect", lambda *_args, **_kwargs: BogusMongo(*_args, **_kwargs))
 
     t = lambda_handler(TEvent, None)
 

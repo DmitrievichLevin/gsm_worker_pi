@@ -5,7 +5,7 @@ import os
 from operator import itemgetter
 from typing import Any
 
-from mongoengine import connect
+import mongoengine
 from mongoengine import Document
 
 from ..sync_sub import SubProcess
@@ -19,7 +19,7 @@ class DocumentProcess(SubProcess):
     def __init__(self, event: dict[str, Any], deps: dict[str, Any]) -> None:
         super().__init__(event, deps)
         uri = os.environ.get("MONGO_URI")
-        self.connection = connect(host=uri)
+        self.connection = mongoengine.connect(host=uri)
 
     def execute(self) -> None:
         """Parent Document Update
