@@ -1,6 +1,7 @@
 """Lambda Handler"""
 from typing import Any
 
+from .doc_process import DocumentProcess
 from .formatters import MediaResponse
 from .media import LambdaEvent
 from .meta_proc import MetaProcess
@@ -15,7 +16,7 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
     match (method):
         case "POST":
             try:
-                sync_proc: Sync = Sync().add(S3Process).add(MetaProcess)
+                sync_proc: Sync = Sync().add(S3Process).add(MetaProcess).add(DocumentProcess)
 
                 result = sync_proc.execute(event)
 
