@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import uuid
 from operator import itemgetter
 from typing import Any
 
@@ -28,12 +29,14 @@ class DocumentProcess(SubProcess):
         """
         _id, doc, doc_path, doc_id = itemgetter("id", "doc", "doc_path", "doc_id")(self.deps['metadata'])
 
+        _id = uuid.UUID(_id)
+
         collection = self.connection[doc]
 
-        with collection.find_one_and_update({'id': _id}, {'$set': {f"{doc_path}": _id}}) as found:
+        found = collection.find_one_and_update({'id': _id}, {'$set': {f"{doc_path}": _id}})
 
-            if not found:
-                raise KeyError(f"Expected {doc} Document id:{doc_id}, but found none.")
+        if not found:
+            raise KeyError(f"Expected {doc} Document id:{doc_id}, but found none.")
 
     def rollback(self) -> None:
         """No Rollback."""
