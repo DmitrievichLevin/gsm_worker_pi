@@ -32,6 +32,7 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
                     "body": body,
                 }
             except Exception as e:
+                raise e
                 return {
                     "statusCode": 500,
                     "headers": {

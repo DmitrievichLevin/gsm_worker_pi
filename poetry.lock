@@ -1122,20 +1122,6 @@ docs = ["sphinx"]
 test = ["pytest", "pytest-cov"]
 
 [[package]]
-name = "mongoengine"
-version = "0.28.2"
-description = "MongoEngine is a Python Object-Document Mapper for working with MongoDB."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "mongoengine-0.28.2-py3-none-any.whl", hash = "sha256:8e0f84a5ad3d335e5da98261454d4ab546c866241ed064adc6433fe2077d43c9"},
-    {file = "mongoengine-0.28.2.tar.gz", hash = "sha256:67c35a2ebe0ee7fd8eda3766dc251b9e0aada4489bb935f7a55b4c570d148ca7"},
-]
-
-[package.dependencies]
-pymongo = ">=3.4,<5.0"
-
-[[package]]
 name = "multipart"
 version = "0.2.5"
 description = "Parser for multipart/form-data."
@@ -2205,4 +2191,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.13"
-content-hash = "d016026657e8a73514d535025c0831ab5865e8fd154b4b28c95859a1f0616353"
+content-hash = "7f17688ae02cc64729520157c2bd3431c6b3eae70e88d15e4de9d9fc0a8dc553"

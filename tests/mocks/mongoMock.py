@@ -15,7 +15,7 @@ class BogusMongo:
 
     def find_one_and_update(self, *_args: Any, **_kwargs: Any) -> Any:
         """Mock mongoengine update"""
-        pass
+        return self
 
     def rollback(self, *_args: Any, **_kwargs: Any) -> None:
         """Mock Rollback"""

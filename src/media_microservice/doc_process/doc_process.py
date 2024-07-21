@@ -5,7 +5,7 @@ import os
 from operator import itemgetter
 from typing import Any
 
-from pymongo import MongoClient
+import pymongo
 
 from ..sync_sub import SubProcess
 
@@ -19,7 +19,7 @@ class DocumentProcess(SubProcess):
     def __init__(self, event: dict[str, Any], deps: dict[str, Any]) -> None:
         super().__init__(event, deps)
         uri = os.environ.get("MONGO_URI")
-        self.connection = MongoClient(host=uri)
+        self.connection = pymongo.MongoClient(host=uri)
 
     def execute(self) -> None:
         """Parent Document Update
