@@ -9,8 +9,6 @@ import pymongo
 
 from ..sync_sub import SubProcess
 
-os.environ['MONGO_URI'] = "mongodb+srv://bev-dev:MPndTl0nQjPL7a4z@bevor-dev.uma4aiv.mongodb.net/?retryWrites=true&w=majority&appName=bevor-dev"
-
 
 class DocumentProcess(SubProcess):
     """Attach Uploaded Media to Parent Document"""
@@ -19,7 +17,8 @@ class DocumentProcess(SubProcess):
     def __init__(self, event: dict[str, Any], deps: dict[str, Any]) -> None:
         super().__init__(event, deps)
         uri = os.environ.get("MONGO_URI")
-        self.connection = pymongo.MongoClient(host=uri)
+        db_name = os.environ.get("MONGO_DB_NAME")
+        self.connection = pymongo.MongoClient(host=uri).get_database(db_name)
 
     def execute(self) -> None:
         """Parent Document Update
