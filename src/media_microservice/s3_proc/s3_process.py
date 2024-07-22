@@ -10,6 +10,8 @@ from mypy_boto3_s3 import S3Client
 from ..media import Media
 from ..sync_sub import SubProcess
 
+EXPIRATION = int(os.environ.get("PRESIGN_EXPIRATION") or "3600")
+
 
 class S3Process(SubProcess):
     """AWS S3 Media Upload Process"""
@@ -86,7 +88,7 @@ class S3Process(SubProcess):
             tuple[tuple[str,str, bytes], tuple[str, str, bytes]]: image | thumbnail, key, & bytes tuples
         """
         _format = media.format
-
+        self.deps['mime'] = media.mime
         self.deps["file_ext"] = _format
 
         if _format is None:
@@ -120,7 +122,7 @@ class S3Process(SubProcess):
                 "Bucket": self.bucket,
                 "Key": key,
             },
-            ExpiresIn=3600,
+            ExpiresIn=EXPIRATION,
         )
 
         if response is None:

@@ -123,6 +123,8 @@ class Media(Generic[MediaProp]):
             ft.guess_mime(raw)
         )
 
+        self.mime = mime
+
         match mime:
             case "image":
                 self._process_img(raw, extension)

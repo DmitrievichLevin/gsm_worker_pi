@@ -27,11 +27,11 @@ class MetaProcess(SubProcess):
         self.cursor = _connection.cursor(as_dict=True)
 
     @property
-    def meta_row(self) -> tuple[str, str, str, str, str, str, str, int, int]:
+    def meta_row(self) -> tuple[str, str, str, str, str, str, str, str, int, int]:
         """Create Metadata Procedure Params
 
         Returns:
-            tuple[str, str, str, str, str, str, str, int]: SQL Procedure params
+            tuple[str, str, str, str, str, str, str, str, int]: SQL Procedure params
         """
         media_id = self.deps["id"]
         user_id = self.deps["owner"]
@@ -39,6 +39,7 @@ class MetaProcess(SubProcess):
         doc = self.deps["doc"]
         doc_id = self.deps["doc_id"]
         doc_path = self.deps["doc_path"]
+        mime = self.deps["mime"]
         file_ext = self.deps["file_ext"]
         file_size = self.deps["file_size"]
         thumb_size = self.deps["thumb_size"]
@@ -50,6 +51,7 @@ class MetaProcess(SubProcess):
             doc,
             doc_id,
             doc_path,
+            mime,
             file_ext,
             file_size,
             thumb_size,

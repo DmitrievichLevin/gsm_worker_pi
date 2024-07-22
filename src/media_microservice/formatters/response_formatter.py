@@ -12,8 +12,8 @@ class MediaResponse():
         """Format Response Body"""
         raw_meta = result['metadata']
 
-        _id, doc, doc_id, doc_path, file_ext, file_size, owner, created_at = itemgetter(
-            "id", "doc", "doc_id", "doc_path", "file_ext", "file_size", "owner", "created_at")(raw_meta)
+        _id, doc, doc_id, doc_path, mime, file_ext, file_size, owner, created_at = itemgetter(
+            "id", "doc", "doc_id", "doc_path", "mime", "file_ext", "file_size", "owner", "created_at")(raw_meta)
 
         return dict(id=_id, url=result['image_url'], thumbnail=result['thumb_url'], metadata=dict(
-            parent=doc, owner=owner, parentId=doc_id, path=doc_path, type=file_ext, created_at=created_at, size=file_size))
+            parent=doc, owner=owner, parentId=doc_id, path=doc_path, mime=mime, type=file_ext, created_at=created_at, size=file_size))

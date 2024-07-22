@@ -29,6 +29,8 @@ ALTER PROCEDURE [dbo].[createMeta]
 (255),
     @doc_path VARCHAR
 (255),
+    @mime VARCHAR
+(255),
     @file_ext VARCHAR
 (255),
     @file_size BIGINT,
@@ -56,7 +58,7 @@ BEGIN
 
     -- Guarentees Existing User
     INSERT INTO dbo.media
-        (id, user_id, bucket, doc, doc_id, doc_path, file_ext, file_size, thumb_size, created_at)
+        (id, user_id, bucket, doc, doc_id, doc_path, mime, file_ext, file_size, thumb_size, created_at)
     OUTPUT
     INSERTED.id,
     INSERTED.user_id
@@ -65,6 +67,7 @@ BEGIN
     INSERTED.doc,
     INSERTED.doc_id,
     INSERTED.doc_path,
+    INSERTED.mime,
     INSERTED.file_ext,
     INSERTED.file_size,
     INSERTED.thumb_size,
@@ -74,7 +77,7 @@ BEGIN
     AS
     created_at
     VALUES
-        (@id, @user_id, @bucket, @doc, @doc_id, @doc_path, @file_ext, @file_size, @thumb_size, CURRENT_TIMESTAMP)
+        (@id, @user_id, @bucket, @doc, @doc_id, @doc_path, @mime, @file_ext, @file_size, @thumb_size, CURRENT_TIMESTAMP)
 
 END
 GO

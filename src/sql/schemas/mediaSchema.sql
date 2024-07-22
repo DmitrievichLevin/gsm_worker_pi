@@ -1,4 +1,3 @@
-
 CREATE TABLE media
 (
     -- S3 Key
@@ -13,6 +12,7 @@ CREATE TABLE media
     doc_id VARCHAR (255) NOT NULL,
     -- Mongo Document Path eg. userInfo.profileImage
     doc_path VARCHAR(255),
+    mime VARCHAR(255),
     file_ext VARCHAR(255),
     -- In Bytes (For Query of file list with size constraint)
     -- Media
