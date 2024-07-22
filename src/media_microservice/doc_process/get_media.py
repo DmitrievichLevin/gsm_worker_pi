@@ -7,8 +7,9 @@ from typing import Any
 import boto3
 import pymssql
 
+from ..formatters import MediaResponse
 from ..sync_sub import SubProcess
-from media_microservice.formatters import MediaResponse
+
 
 EXPIRATION = int(os.environ.get("PRESIGN_EXPIRATION") or "3600")
 
@@ -36,6 +37,7 @@ class ResolveMedia(SubProcess):
         uname = os.environ.get("sql_uname")
         pword = os.environ.get("sql_pword")
         db = os.environ.get("sql_db")
+        # pylint: disable=no-member
         _connection = pymssql.connect(host, uname, pword, db)
         self.sql = _connection
 
