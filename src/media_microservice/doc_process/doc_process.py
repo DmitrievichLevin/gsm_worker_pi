@@ -32,7 +32,8 @@ class DocumentProcess(SubProcess):
         # str->ObjectId
         doc_id = bson.ObjectId(doc_id)
 
-        found = self.connection[doc].find_one_and_update(
+        # Add 's' to document_name for collection_name
+        found = self.connection[doc + 's'].find_one_and_update(
             {'_id': doc_id}, {'$set': {f"{doc_path}": _id}}, return_document=pymongo.ReturnDocument.AFTER)
 
         if not found:
