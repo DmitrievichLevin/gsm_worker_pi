@@ -5,7 +5,7 @@ from typing import Iterator
 
 class BogusSQL:
     """Mock Pymssql"""
-    inserted = {'id': 'b292a405-446e-4720-bdb6-292288459f53', 'owner': '123-456', 'doc': 'User', 'doc_id': 'u34-4675',
+    inserted = {'id': 'b292a405-446e-4720-bdb6-292288459f53', 'owner': '123-456', 'doc': 'User', 'doc_id': '666f6f2d6261722d71757578',
                 'doc_path': 'profileImage', 'mime': 'image', 'file_ext': 'jpeg', 'file_size': 32813, 'thumb_size': 8780, 'created_at': 1721419334}
 
     def __init__(self, *_args: Any, **_kwargs: Any) -> None:

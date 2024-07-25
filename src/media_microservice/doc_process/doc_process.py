@@ -5,6 +5,7 @@ import os
 from operator import itemgetter
 from typing import Any
 
+import bson
 import pymongo
 
 from ..sync_sub import SubProcess
@@ -28,8 +29,11 @@ class DocumentProcess(SubProcess):
         """
         _id, doc, doc_path, doc_id = itemgetter("id", "doc", "doc_path", "doc_id")(self.deps['metadata'])
 
+        # str->ObjectId
+        doc_id = bson.ObjectId(doc_id)
+
         found = self.connection[doc].find_one_and_update(
-            {'id': doc_id}, {'$set': {f"{doc_path}": _id}}, return_document=pymongo.ReturnDocument.AFTER)
+            {'_id': doc_id}, {'$set': {f"{doc_path}": _id}}, return_document=pymongo.ReturnDocument.AFTER)
 
         if not found:
             raise KeyError(f"Expected {doc} Document id:{doc_id}, but found none.")
