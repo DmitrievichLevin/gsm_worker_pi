@@ -40,10 +40,18 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
             case "GET":
                 sync_proc = Sync().add(ResolveMedia)
 
-                result = sync_proc.execute(event)
-
+                resolved_media: dict[str, Any] = sync_proc.execute(event)
+                status = 200
+                if resolved_media['data'] is False:
+                    status = 409
+                    body = {"message": "Unable to resolve media."}
+                elif len(resolved_media['data']):  # type: ignore[arg-type]
+                    status = 404
+                    body = {"message": "Unable to locate media."}
+                else:
+                    body = resolved_media  # type: ignore[arg-type]
                 return {
-                    "statusCode": 200,
+                    "statusCode": status,
                     "headers": {
                         "Access-Control-Allow-Headers": "Content-Type",
                         "Access-Control-Allow-Origin": "*",

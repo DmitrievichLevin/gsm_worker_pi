@@ -1,6 +1,7 @@
 """Mongo Document SubProcess"""
 from __future__ import annotations
 
+import logging
 import os
 from typing import Any
 
@@ -60,14 +61,14 @@ class ResolveMedia(SubProcess):
                 _formatted = MediaResponse.format({'image_url': image, "thumb_url": thumb, "metadata": row})
 
                 _parsed.append(_formatted)
-
+                logging.info("Resolved Media %s", _parsed)
             self.sql.commit()
 
         self.deps = {'data': _parsed}
 
     def rollback(self) -> None:
         """No Rollback"""
-        pass
+        self.deps = {'data': False}
 
     def __getpresignedurl(self, key: str) -> str:
         media = self.client.generate_presigned_url('get_object',

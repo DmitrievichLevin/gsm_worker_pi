@@ -45,7 +45,7 @@ BEGIN
         file_size,
         DATEDIFF
     (SECOND,'1970-01-01',
-    created_at)
+    created_at) as created_at
     FROM media
     WHERE doc = @doc AND doc_id = @doc_id
 
