@@ -67,6 +67,7 @@ class Media(Generic[MediaProp]):
 
     def __init__(self, event: LambdaEvent):
         headers = event["headers"]
+        logging.debug("Deserializer verify headers %s", event["headers"])
         cont_type = headers["content-type"]
         cont_len = len(event["body"])
 

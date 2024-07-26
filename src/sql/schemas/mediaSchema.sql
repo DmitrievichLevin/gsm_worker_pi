@@ -1,7 +1,8 @@
+
 CREATE TABLE media
 (
     -- S3 Key
-    id VARCHAR(255) NOT NULL PRIMARY KEY,
+    id VARCHAR(255) NOT NULL UNIQUE,
     -- S3 Dir (User ID)
     user_id VARCHAR(255) NOT NULL,
     -- S3 Bucket
@@ -25,3 +26,12 @@ CREATE TABLE media
     -- Index Mongo Doc For Optimized Query on Document Media
     INDEX fk_media_doc (doc ASC)
 );
+
+-- Media exists once per document-property
+ALTER TABLE [dbo].[media] ADD CONSTRAINT
+    UNIQUE_Table UNIQUE CLUSTERED
+    (
+       user_id,
+       doc_path,
+       doc
+    ) ON [PRIMARY]

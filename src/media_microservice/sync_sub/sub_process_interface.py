@@ -43,13 +43,17 @@ class Sync:
         e: Arbitrary exception thrown by SubProcess execution.
     """
 
-    services: list[Type[SubProcess]] = []
+    services: list[Type[SubProcess]]
     # Result of Synchronized Process(s)
-    result: dict[str, Any] = {}
+    result: dict[str, Any]
 
     def __init__(self, initial: dict[str, Any] | None = None) -> None:
-        if initial is not None:
-            self.result = initial
+        if not initial:
+            _initial = {}
+        else:
+            _initial = initial
+        self.result = _initial
+        self.services = []
 
     def add(self, service: Type[SubProcess]) -> Sync:
         """Add Subprocess

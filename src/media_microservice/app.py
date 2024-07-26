@@ -18,9 +18,9 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
         match (method):
             case "POST":
 
-                sync_proc: Sync = Sync().add(S3Process).add(MetaProcess).add(DocumentProcess)
+                post_proc: Sync = Sync().add(S3Process).add(MetaProcess).add(DocumentProcess)
 
-                result = sync_proc.execute(event)
+                result = post_proc.execute(event)
 
                 body = MediaResponse.format(result)
 
@@ -35,9 +35,9 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
                 }
 
             case "GET":
-                sync_proc = Sync().add(ResolveMedia)
+                get_proc = Sync().add(ResolveMedia)
 
-                resolved_media: dict[str, Any] = sync_proc.execute(event)
+                resolved_media: dict[str, Any] = get_proc.execute(event)
                 status = 200
                 if resolved_media['data'] is False:
                     status = 409
