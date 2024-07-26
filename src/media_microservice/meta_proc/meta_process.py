@@ -1,6 +1,7 @@
 """MetaProcess Module"""
 from __future__ import annotations
 
+import logging
 import os
 from typing import Any
 
@@ -63,7 +64,7 @@ class MetaProcess(SubProcess):
             cursor.callproc("createMeta", self.meta_row)
 
             new_row, *_ = cursor
-
+            logging.info("Created Media Record:\nmetadata: %s", new_row)
             # Update deps for next SubProcess
             self.deps["metadata"] = new_row
 

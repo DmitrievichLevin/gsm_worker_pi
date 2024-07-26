@@ -1,5 +1,6 @@
 """Media Deserializer"""
 import base64
+import logging
 import sys
 import uuid
 from io import BytesIO
@@ -127,8 +128,10 @@ class Media(Generic[MediaProp]):
 
         match mime:
             case "image":
+                logging.info("Deserializing %s image id:%s", doc, doc_id)
                 self._process_img(raw, extension)
             case _:
+                logging.warning("Unsupported mime detected: %s", mime)
                 raise TypeError(f"Expected image, but found {mime}.")
 
     def _process_img(self, bts: BytesIO, extension: MediaProp) -> None:
@@ -140,10 +143,12 @@ class Media(Generic[MediaProp]):
         try:
             self.format = self.allowed_extensions[extension]
         except Exception as e:
+            logging.warning("Unsupported file extension detected: %s", extension)
             raise TypeError(f"File extension not supported {extension}") from e
 
         # Resize Image to correct dimensions if applicable
         if img.width > BASE or img.height > BASE:
+            logging.debug("Resizing image \nlimit:%s original dimensions: %sx%s", BASE, img.width, img.height)
             img = self._resize(img)
 
         full_img = BytesIO()
@@ -209,6 +214,7 @@ class Media(Generic[MediaProp]):
         )
 
         resized_image = image.resize(new_size, Pil.Resampling.NEAREST)
+        logging.info("Resized image new dimensions(w,h): %s", new_size)
 
         image.close()
         return resized_image
@@ -219,6 +225,7 @@ class Media(Generic[MediaProp]):
         boundary: MediaProp = pdict["boundary"]
 
         if ctype != "multipart/form-data":
+            logging.warning("Expected multipart/form-data, but found %s", ctype)
             raise TypeError(f"Expected multipart/form-data, but found {ctype}")
         else:
             return boundary, _len

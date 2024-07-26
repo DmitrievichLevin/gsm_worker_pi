@@ -1,6 +1,7 @@
 """Syncronized 'Fail-fast' Subprocess builder"""
 from __future__ import annotations
 
+import logging
 from abc import ABCMeta
 from abc import abstractmethod
 from typing import Any
@@ -88,6 +89,7 @@ class Sync:
                 executed.append(service)
                 service.execute()
             except Exception as e:
+                logging.error("Sync Subprocess %s failed.\nReason: %s", s.__name__, e)
                 self.rollback_all(executed)
                 raise e
 

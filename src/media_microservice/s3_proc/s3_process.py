@@ -1,6 +1,7 @@
 """S3 Media SubProcess"""
 from __future__ import annotations
 
+import logging
 import os
 from typing import Any
 
@@ -30,6 +31,7 @@ class S3Process(SubProcess):
         self.deps['doc'] = media.doc
         self.deps['doc_id'] = media.doc_id
         self.deps['doc_path'] = media.doc_path
+        logging.debug("Successfully deserialized media.\nattributes:\n%s", str(self.deps))
         self.s3: S3Client = boto3.client("s3")
 
     @property
@@ -126,6 +128,7 @@ class S3Process(SubProcess):
         )
 
         if response is None:
+            logging.error("Unable to generate pre-signed url, 'no response'.")
             raise RuntimeError("Unable to generate pre-signed url.")
 
         return response
@@ -138,7 +141,7 @@ class S3Process(SubProcess):
 
         for field, k, b in _args:
             self.s3.put_object(Bucket=self.bucket, Key=k, Body=b)
-
+            logging.info("Successful upload to S3:\nBucket:%s\nKey:%s", self.bucket, k)
             # Update deps w/ presigned url of newly added media
             self.deps[field + "_url"] = self.presigned_url_get(k)
 
@@ -161,4 +164,5 @@ class S3Process(SubProcess):
             try:
                 self.s3.delete_object(Bucket=self.bucket, Key=k)
             except Exception as e:
+                logging.debug("Error deleting S3 object during rollback %s", e)
                 raise e
