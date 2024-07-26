@@ -3,6 +3,7 @@
 # pylint: disable=import-error
 # pylint: disable=import-outside-toplevel
 # mypy: ignore-errors
+import logging
 import os
 
 from .lamb_data import TEvent
@@ -21,6 +22,7 @@ def test_media_deserializer_jpeg(monkeypatch) -> None:
     import boto3
     import pymssql
     import pymongo
+    logging.debug("test logger")
     from media_microservice.app import lambda_handler
     monkeypatch.setattr(boto3, "client", lambda x: BogoClient(x))
     monkeypatch.setattr(pymssql, "connect", lambda *_args: BogusSQL(*_args))

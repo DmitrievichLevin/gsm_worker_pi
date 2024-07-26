@@ -136,7 +136,7 @@ def tests(session: Session) -> None:
     """Run the test suite."""
     session.install(".")
     session.install("pytest", "pygments")
-    args = ["-s"]
+    args = ["-s", "--log-level=DEBUG", "--log-cli-level=DEBUG"]
     session.run(
         "pytest",
         *args,

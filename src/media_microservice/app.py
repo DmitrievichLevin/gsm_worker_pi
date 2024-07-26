@@ -1,10 +1,10 @@
 """Lambda Handler"""
+import logging
 from typing import Any
 
 from .doc_process import DocumentProcess
 from .doc_process import ResolveMedia
 from .formatters import MediaResponse
-from .logger import start_log
 from .media import LambdaEvent
 from .meta_proc import MetaProcess
 from .s3_proc import S3Process
@@ -14,8 +14,9 @@ from .sync_sub import Sync
 def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
     """Media Microservice Lambda Handler"""
     method = event["requestContext"]["http"]["method"]
+
     # Start Log
-    start_log(method)
+    logging.debug("checking log")
     try:
         match (method):
             case "POST":
