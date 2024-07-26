@@ -45,11 +45,11 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
                 if resolved_media['data'] is False:
                     status = 409
                     body = {"message": "Unable to resolve media."}
-                elif len(resolved_media['data']):  # type: ignore[arg-type]
+                elif len(resolved_media['data']):
                     status = 404
                     body = {"message": "Unable to locate media."}
                 else:
-                    body = resolved_media  # type: ignore[arg-type]
+                    body = resolved_media
                 return {
                     "statusCode": status,
                     "headers": {
