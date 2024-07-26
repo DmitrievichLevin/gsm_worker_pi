@@ -47,6 +47,9 @@ class ResolveMedia(SubProcess):
         except Exception as e:
             raise KeyError("Expected query param(s): doc, & doc_id.") from e
 
+    def __filepaths(self, row: dict[str, Any]) -> tuple[str, str]:
+        return (row['owner'] + '/' + row['id'] + '/' + row['image_key'], row['owner'] + '/' + row['id'] + '/' + row['thumb_key'])
+
     def execute(self) -> None:
         """Query SQL for Media metadata + Generate PresignedUrl"""
         cursor = self.sql.cursor(as_dict=True)
@@ -55,8 +58,11 @@ class ResolveMedia(SubProcess):
             cursor.callproc("getMeta", self.doc_query)
 
             for row in cursor:
-                image = self.__getpresignedurl(row['image_key'])
-                thumb = self.__getpresignedurl(row['thumb_key'])
+                _urls = []
+                for _path in self.__filepaths(row):
+                    _urls.append(self.__getpresignedurl(_path))
+
+                image, thumb = tuple(*_urls)
 
                 _formatted = MediaResponse.format({'image_url': image, "thumb_url": thumb, "metadata": row})
 
