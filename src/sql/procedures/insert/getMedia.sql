@@ -31,11 +31,13 @@ BEGIN
     DECLARE @hyph VARCHAR(100)='-'
     DECLARE @period VARCHAR(100)='.'
     DECLARE @thumb VARCHAR(100)='thumb'
+    DECLARE @slash VARCHAR(100)='/'
     -- Get Media Meta Rows
+    -- Key = [user_id]/[doc_id]/[id]-[mime or 'thumb'].[file_ext]
     SELECT
         id,
-        CONCAT(id, @hyph, mime ,@period, file_ext) AS image_key,
-        CONCAT(id, @hyph, @thumb, @period, file_ext) AS thumb_key,
+        CONCAT(user_id,@slash,doc_id,@slash, id, @hyph, mime ,@period, file_ext) AS image_key,
+        CONCAT(user_id,@slash,doc_id,@slash,id, @hyph, @thumb, @period, file_ext) AS thumb_key,
         doc,
         doc_id,
         user_id AS 'owner',
