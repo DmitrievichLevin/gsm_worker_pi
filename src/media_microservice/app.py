@@ -1,5 +1,4 @@
 """Lambda Handler"""
-import logging
 from typing import Any
 
 from .doc_process import DocumentProcess
@@ -15,8 +14,6 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
     """Media Microservice Lambda Handler"""
     method = event["requestContext"]["http"]["method"]
 
-    # Start Log
-    logging.debug("checking log")
     try:
         match (method):
             case "POST":
@@ -45,7 +42,7 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
                 if resolved_media['data'] is False:
                     status = 409
                     body = {"message": "Unable to resolve media."}
-                elif len(resolved_media['data']):
+                elif len(resolved_media['data']) == 0:
                     status = 404
                     body = {"message": "Unable to locate media."}
                 else:

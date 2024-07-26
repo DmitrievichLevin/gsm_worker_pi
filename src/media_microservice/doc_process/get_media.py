@@ -64,11 +64,11 @@ class ResolveMedia(SubProcess):
                 logging.info("Resolved Media %s", _parsed)
             self.sql.commit()
 
-        self.deps = {'data': _parsed}
+        self.deps['data'] = _parsed
 
     def rollback(self) -> None:
         """No Rollback"""
-        self.deps = {'data': False}
+        self.deps['data'] = False
 
     def __getpresignedurl(self, key: str) -> str:
         media = self.client.generate_presigned_url('get_object',
