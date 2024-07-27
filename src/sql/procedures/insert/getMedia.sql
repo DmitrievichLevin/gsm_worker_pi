@@ -36,8 +36,8 @@ BEGIN
     -- Key = [user_id]/[doc_id]/[id]-[mime or 'thumb'].[file_ext]
     SELECT
         id,
-        CONCAT(user_id,@slash,doc_id,@slash, id, @hyph, mime ,@period, file_ext) AS image_key,
-        CONCAT(user_id,@slash,doc_id,@slash,id, @hyph, @thumb, @period, file_ext) AS thumb_key,
+        CONCAT(user_id,@slash,id,@slash, id, @hyph, mime ,@period, file_ext) AS image_key,
+        CONCAT(user_id,@slash,id,@slash,id, @hyph, @thumb, @period, file_ext) AS thumb_key,
         doc,
         doc_id,
         user_id AS 'owner',
