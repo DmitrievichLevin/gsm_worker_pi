@@ -97,12 +97,19 @@ class Media(Generic[MediaProp]):
             Any: value
         """
         query: dict[str, Any] = self.query
-        value = self.multipart.get(key) or query.get(key, None)
+        value = None
 
-        if (value is None):
+        # File Case
+        if any([k == key for k in ['file', 'image', 'video']]):
+            value = getattr(self.multipart.get(key), 'file', None)
+        # Primitive Case
+        else:
+            value = getattr(self.multipart.get(key), 'value', None) or query.get(key, None)
+
+        if value is None:
             raise TypeError("Expected property(s) %s in request query or body, but found None." % key)
 
-        return getattr(value, 'file', None) or getattr(value, 'value', None)
+        return value
 
     def __parse(self, _type: str, _len: int, body_str: str) -> None:
         """Parse Multipart File Upload
