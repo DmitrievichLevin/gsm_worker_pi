@@ -40,6 +40,7 @@ class Media(Generic[MediaProp]):
     Yields:
         _type_: _description_
     """
+    query: dict[str, str]
 
     id: uuid.UUID
     format: MediaProp
@@ -70,6 +71,7 @@ class Media(Generic[MediaProp]):
         logging.debug("Deserializer verify headers %s", event["headers"])
         cont_type = headers["content-type"]
         cont_len = len(event["body"])
+        self.query = event.get("queryStringParameters", {})
 
         self.__parse(cont_type, cont_len, event["body"])
 
@@ -81,6 +83,26 @@ class Media(Generic[MediaProp]):
             tuple[int, int]: media & thumbnail size in bytes.
         """
         return self.image_size, self.thumbnail_size
+
+    def __extract_value(self, key: str) -> Any:
+        """Extract Value from Form or Query Params
+
+        Args:
+            key (str): key of value
+
+        Raises:
+            TypeError: Key exists in neither query params or body.
+
+        Returns:
+            Any: value
+        """
+        query: dict[str, Any] = self.query
+        value = self.multipart.get(key) or query.get(key, None)
+
+        if (value is None):
+            raise TypeError("Expected property(s) %s in request query or body, but found None." % key)
+
+        return getattr(value, 'file', None) or getattr(value, 'value', None)
 
     def __parse(self, _type: str, _len: int, body_str: str) -> None:
         """Parse Multipart File Upload
@@ -98,17 +120,17 @@ class Media(Generic[MediaProp]):
         # Get Boundary & size
         boundary, memfile_limit = self._pdict(_type, _len)
 
-        multipart = mp.MultipartParser(body, boundary, memfile_limit)
+        self.multipart = mp.MultipartParser(body, boundary, memfile_limit)
 
-        raw = BytesIO(multipart.get("file").file.read())
+        raw = BytesIO(self.__extract_value('file').read())
 
-        user_id = multipart.get("id").value
+        user_id = self.__extract_value('id')
 
-        doc = multipart.get("doc").value
+        doc = self.__extract_value("doc")
 
-        doc_id = multipart.get("doc_id").value
+        doc_id = self.__extract_value("doc_id")
 
-        doc_path = multipart.get("doc_path").value
+        doc_path = self.__extract_value("doc_path")
 
         # Create Media Procedure Params
         self.id = str(uuid.uuid4())  # type: ignore[assignment]
