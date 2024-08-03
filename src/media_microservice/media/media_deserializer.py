@@ -131,6 +131,7 @@ class Media(Generic[MediaProp]):
 
         self.multipart = mp.MultipartParser(body, boundary, memfile_limit)
 
+        # Pass Query param: mediaKey to extract file from multipart
         raw = BytesIO(self.__extract_value(self.query.get('mediaKey', 'file')).read())
 
         user_id = self.__extract_value('id')
