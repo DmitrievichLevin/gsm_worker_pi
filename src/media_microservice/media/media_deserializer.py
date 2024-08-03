@@ -104,7 +104,9 @@ class Media(Generic[MediaProp]):
             value = getattr(self.multipart.get(key), 'file', None)
         # Primitive Case
         else:
-            value = getattr(self.multipart.get(key), 'value', None) or query.get(key, None)
+            value = getattr(self.multipart.get(key), 'value', None)
+            if value is None or value == 'undefined':
+                value = query.get(key, None)
 
         if value is None:
             raise TypeError("Expected property(s) %s in request query or body, but found None." % key)
