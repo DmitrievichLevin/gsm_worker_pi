@@ -100,7 +100,7 @@ class Media(Generic[MediaProp]):
         value = None
 
         # File Case
-        if any([k == key for k in ['file', 'image', 'video']]):
+        if any([k in key for k in ['file', 'image', 'video']]):
             value = getattr(self.multipart.get(key), 'file', None)
         # Primitive Case
         else:
@@ -131,7 +131,7 @@ class Media(Generic[MediaProp]):
 
         self.multipart = mp.MultipartParser(body, boundary, memfile_limit)
 
-        raw = BytesIO(self.__extract_value('file').read())
+        raw = BytesIO(self.__extract_value(self.query.get('mediaKey', 'file')).read())
 
         user_id = self.__extract_value('id')
 
