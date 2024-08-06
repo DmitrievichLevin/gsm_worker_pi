@@ -31,6 +31,7 @@ class ResolveMedia(SubProcess):
         super().__init__(event, deps)
         # AWS
         self.client = boto3.client("s3")
+        self.s3 = boto3.resource('s3')
         self.bucket = os.environ.get("AWS_BUCKET")
 
         # SQL
@@ -71,6 +72,24 @@ class ResolveMedia(SubProcess):
         self.deps['data'] = False
 
     def __getpresignedurl(self, key: str) -> str:
+        """Generate Presigned Url
+
+        Args:
+            key (str): key of S3 object
+
+        Raises:
+            KeyError: Media does not exist.
+
+        Returns:
+            str: presigned-url
+        """
+        try:
+            self.s3.Object(self.bucket, key).load()  # type: ignore[arg-type]
+        except Exception as e:
+            _logmsg = "Broken media reference in S3 bucket '%s' id:%s" % (self.bucket, key)
+            logging.error(_logmsg)
+            raise KeyError("Media does not exist.") from e
+
         media = self.client.generate_presigned_url('get_object',
                                                    Params={
                                                        'Bucket': self.bucket,

@@ -3,9 +3,12 @@ from typing import Any
 
 from .doc_process import DocumentProcess
 from .doc_process import ResolveMedia
+from .formatters import DocumentResponse
 from .formatters import MediaResponse
 from .media import LambdaEvent
+from .meta_proc import MetaDelete
 from .meta_proc import MetaProcess
+from .s3_proc import S3Delete
 from .s3_proc import S3Process
 from .sync_sub import Sync
 
@@ -55,6 +58,27 @@ def lambda_handler(event: LambdaEvent, _context: Any) -> dict[Any, Any]:
                         "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
                     },
                     "body": body,
+                }
+            case "DELETE":
+                get_proc = Sync().add(DocumentProcess).add(S3Delete).add(MetaDelete)
+
+                # Result of sync process
+                result = get_proc.execute(event)
+
+                # Get Removed Media Id's from Process
+                deleted_media_ids = result['deleted']
+
+                # Get updated doc from result
+                updated_doc = result['updated_doc']
+
+                return {
+                    "statusCode": 200,
+                    "headers": {
+                        "Access-Control-Allow-Headers": "Content-Type",
+                        "Access-Control-Allow-Origin": "*",
+                        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                    },
+                    "body": {'deleted_media': deleted_media_ids, 'updated_document': DocumentResponse.format(updated_doc)},
                 }
             case _:
                 return {"statusCode": 405, "body": {"message": f"{method} Not Allowed."}}

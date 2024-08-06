@@ -17,6 +17,10 @@ class BogusMongo:
         """Mock get_database"""
         return self
 
+    def find_one(self, *_args: Any, **_kwargs: Any) -> Any:
+        """Mock mongoengine find document"""
+        return self
+
     def find_one_and_update(self, *_args: Any, **_kwargs: Any) -> Any:
         """Mock mongoengine update"""
         return self

@@ -1,5 +1,5 @@
 -- =======================================================
--- Create User Procedure
+-- Delete Media Procedure
 -- =======================================================
 SET ANSI_NULLS ON
 GO
@@ -8,26 +8,24 @@ GO
 -- =============================================
 -- Author:      Dmitrievich Levin
 -- Create Date: 08/2/2024
--- Description: Create User Row.
+-- Description: Delete Media Metadata Row.
 -- =============================================
-CREATE PROCEDURE users.createUser
-    (
-    @user_id VARCHAR
-)
+IF NOT EXISTS (SELECT *
+FROM sys.objects
+WHERE type = 'P' AND OBJECT_ID = OBJECT_ID('deleteMedia'))
+   exec('CREATE PROCEDURE [dbo].[deleteMedia] AS BEGIN SET NOCOUNT ON; END')
+GO
+ALTER PROCEDURE [dbo].[deleteMedia]
+    @id VARCHAR(255)
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from
     -- interfering with SELECT statements.
     SET NOCOUNT ON
 
-    DECLARE @newUser TABLE (id CHAR)
-
-    -- Create User WHERE NOT EXISTS
-    INSERT INTO users
-        (id)
-    OUTPUT INSERTED.id INTO @newUser
-
-    SELECT *
-    FROM @newUser
+    DELETE FROM [dbo].[media]
+    -- Output deleted row ID
+    OUTPUT DELETED.id
+    WHERE id = @id
 END
 GO
