@@ -64,6 +64,7 @@ BEGIN
         ON
         m_new.user_id = m_orig.user_id
         AND m_new.doc_path = m_orig.doc_path
+        AND m_new.doc_id = m_orig.doc_id
         AND m_new.doc = m_orig.doc
         WHEN NOT MATCHED BY TARGET THEN
         INSERT (id, user_id, bucket, doc, doc_id, doc_path, mime, file_ext, file_size, thumb_size, created_at)  VALUES (m_new.id, m_new.user_id, m_new.bucket, m_new.doc, m_new.doc_id, m_new.doc_path, m_new.mime, m_new.file_ext, m_new.file_size, m_new.thumb_size, m_new.created_at)

@@ -33,5 +33,6 @@ ALTER TABLE [dbo].[media] ADD CONSTRAINT
     (
        user_id,
        doc_path,
+       doc_id,
        doc
     ) ON [PRIMARY]
