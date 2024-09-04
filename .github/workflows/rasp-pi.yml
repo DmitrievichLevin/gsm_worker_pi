@@ -25,7 +25,9 @@ jobs:
 
     steps:
       - run: |
-          ln ${{ github.workspace }}/* $HOME/$GH_REPO && rm -rf ${{ github.workspace }}
+          rm -r $HOME/$GH_REPO
+          cp -r -u ${{ github.workspace }} $HOME/
+          rm -r ${{ github.workspace }}
 
 #   deploy:
 #     runs-on: self-hosted
