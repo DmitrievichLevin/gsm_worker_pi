@@ -16,8 +16,11 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
-          echo "Value of MY_SECRET: $MY_SECRET"
-          export MY_SECRET=$MY_SECRET
+          for key in $secrets; do
+            value=$(echo $json | jq -r .[key])
+            echo "$key has value $value"
+            echo "$key=$value"
+          done
 
 #   deploy:
 #     runs-on: self-hosted
