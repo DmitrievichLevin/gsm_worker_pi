@@ -18,7 +18,7 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
-          mv ${{ github.workspace }} $HOME
+          mv -f ${{ github.workspace }} $HOME
           export GITHUB_WORKSPACE=$HOME/$GH_REPO
 
 #   deploy:
