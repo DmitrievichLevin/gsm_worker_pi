@@ -1,4 +1,4 @@
-Media_Lambda
+notif_svr_pi
 ============
 
 |PyPI| |Python Version| |License|
@@ -7,23 +7,23 @@ Media_Lambda
 
 |pre-commit| |Black|
 
-.. |PyPI| image:: https://img.shields.io/pypi/v/media_lambda.svg
-   :target: https://pypi.org/project/media_lambda/
+.. |PyPI| image:: https://img.shields.io/pypi/v/notif_svr_pi.svg
+   :target: https://pypi.org/project/notif_svr_pi/
    :alt: PyPI
-.. |Python Version| image:: https://img.shields.io/pypi/pyversions/media_lambda
-   :target: https://pypi.org/project/media_lambda
+.. |Python Version| image:: https://img.shields.io/pypi/pyversions/notif_svr_pi
+   :target: https://pypi.org/project/notif_svr_pi
    :alt: Python Version
-.. |License| image:: https://img.shields.io/pypi/l/media_lambda
+.. |License| image:: https://img.shields.io/pypi/l/notif_svr_pi
    :target: https://opensource.org/licenses/MIT
    :alt: License
-.. |Read the Docs| image:: https://img.shields.io/readthedocs/media_lambda/latest.svg?label=Read%20the%20Docs
-   :target: https://media_lambda.readthedocs.io/
-   :alt: Read the documentation at https://media_lambda.readthedocs.io/
-.. |Tests| image:: https://github.com/dmitrievichlevin/media_lambda/workflows/Tests/badge.svg
-   :target: https://github.com/dmitrievichlevin/media_lambda/actions?workflow=Tests
+.. |Read the Docs| image:: https://img.shields.io/readthedocs/notif_svr_pi/latest.svg?label=Read%20the%20Docs
+   :target: https://notif_svr_pi.readthedocs.io/
+   :alt: Read the documentation at https://notif_svr_pi.readthedocs.io/
+.. |Tests| image:: https://github.com/dmitrievichlevin/notif_svr_pi/workflows/Tests/badge.svg
+   :target: https://github.com/dmitrievichlevin/notif_svr_pi/actions?workflow=Tests
    :alt: Tests
-.. |Codecov| image:: https://codecov.io/gh/dmitrievichlevin/media_lambda/branch/main/graph/badge.svg
-   :target: https://codecov.io/gh/dmitrievichlevin/media_lambda
+.. |Codecov| image:: https://codecov.io/gh/dmitrievichlevin/notif_svr_pi/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/dmitrievichlevin/notif_svr_pi
    :alt: Codecov
 .. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
    :target: https://github.com/pre-commit/pre-commit
@@ -48,11 +48,11 @@ Requirements
 Installation
 ------------
 
-You can install *Media_Lambda* via pip_ from PyPI_:
+You can install *notif_svr_pi* via pip_ from PyPI_:
 
 .. code:: console
 
-   $ pip install media_lambda
+   $ pip install notif_svr_pi
 
 
 Usage
@@ -72,7 +72,7 @@ License
 -------
 
 Distributed under the terms of the `MIT license`_,
-*Media_Lambda* is free and open source software.
+*notif_svr_pi* is free and open source software.
 
 
 Issues
@@ -92,8 +92,8 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _MIT license: https://opensource.org/licenses/MIT
 .. _PyPI: https://pypi.org/
 .. _Hypermodern Python Cookiecutter: https://github.com/cjolowicz/cookiecutter-hypermodern-python
-.. _file an issue: https://github.com/dmitrievichlevin/media_lambda/issues
+.. _file an issue: https://github.com/dmitrievichlevin/notif_svr_pi/issues
 .. _pip: https://pip.pypa.io/
 .. github-only
 .. _Contributor Guide: CONTRIBUTING.rst
-.. _Usage: https://media_lambda.readthedocs.io/en/latest/usage.html
+.. _Usage: https://notif_svr_pi.readthedocs.io/en/latest/usage.html
