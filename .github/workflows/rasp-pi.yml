@@ -12,13 +12,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: oNaiPs/secrets-to-env-action@v1
-        name: Set ENV Variables
+      - uses: thaind0/envfile@v1
+        name: Create Env File
         id: export_env
         with:
           secrets: ${{ toJSON(secrets) }}
+          file: .prod.env
       - run: |
-          echo ${{env}} >> $HOME/.test
+          cp -r -u .prod.env $HOME/
 
   install:
     runs-on: self-hosted
