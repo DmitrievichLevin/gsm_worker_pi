@@ -7,9 +7,15 @@ on:
 env:
   GH_REPO: ${{ github.event.repository.name }}
 jobs:
+  get-env:
+    runs-on: self-hosted
+    steps:
+      - run: |
+          export $(cat $HOME/etc/environment)
+
   build:
     runs-on: self-hosted
-
+    needs: get-env
     steps:
       - uses: actions/checkout@v4
       - uses: thaind0/envfile@v1
@@ -23,13 +29,14 @@ jobs:
 
   install:
     runs-on: self-hosted
-
+    needs: build
     steps:
       - run: |
           [ -e $HOME/$GH_REPO ] && rm -r $HOME/$GH_REPO
           cp -r -u ${{ github.workspace }} $HOME/
           rm -r ${{ github.workspace }}
-          export TESTING_VAR="Hello"
+          source $HOME/.prod.env
+          export $(cut -d= -f1 $HOME/.prod.env)
 
 #   deploy:
 #     runs-on: self-hosted
