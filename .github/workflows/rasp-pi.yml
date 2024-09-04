@@ -18,7 +18,7 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
-          echo ${{ github.workspace }}
+          mv ${{ github.workspace }} $HOME
 
 #   deploy:
 #     runs-on: self-hosted
