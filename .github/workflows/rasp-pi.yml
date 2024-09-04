@@ -18,7 +18,7 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
-          for key in ${{ toJSON(secrets) }}; do value=$(echo $tags | jq --arg k "$key" -r '.[$k]'); echo "$key=$value";done
+          for key in $secrets; do value=$(echo $tags | jq --arg k "$key" -r '.[$k]'); export $key=$value;done
 
   install:
     runs-on: self-hosted
