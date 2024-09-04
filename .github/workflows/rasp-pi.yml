@@ -13,7 +13,7 @@ jobs:
       - run: |
           cd
           echo "$PWD"
-          export $(cat $HOME/etc/environment)
+          export $(cat /etc/environment)
 
   build:
     runs-on: self-hosted
