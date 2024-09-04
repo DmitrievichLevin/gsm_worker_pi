@@ -18,16 +18,17 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
-          for key in $secrets; do value=$(echo $tags | jq --arg k "$key" -r '.[$k]'); export $key=$value;done
+          for key in $secrets; do value=$(echo $tags | jq --arg k "$key" -r '.[$k]'); echo $key=$value >> $HOME/.test;done
 
   install:
     runs-on: self-hosted
 
     steps:
       - run: |
-          rm -r $HOME/$GH_REPO
+          [ -e $HOME/$GH_REPO ] && rm -r $HOME/$GH_REPO
           cp -r -u ${{ github.workspace }} $HOME/
           rm -r ${{ github.workspace }}
+          export TESTING_VAR="Hello"
 
 #   deploy:
 #     runs-on: self-hosted
