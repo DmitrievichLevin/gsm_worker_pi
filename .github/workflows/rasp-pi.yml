@@ -29,6 +29,12 @@ jobs:
           cp -r -u ${{ github.workspace }} $HOME/
           rm -r ${{ github.workspace }}
 
+  env-config:
+    runs-on: self-hosted
+    steps:
+      - run: |
+          for key in $keys; do value=$(echo $tags | jq --arg k "$key" -r '.[$k]'); echo "$key=$value";done
+
 #   deploy:
 #     runs-on: self-hosted
 #     needs: build
