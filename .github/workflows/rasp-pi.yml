@@ -4,6 +4,8 @@ name: Deploy to Raspberry Pi Zero Worker
 on:
   push:
     branches: [prod]
+env:
+  GH_REPO: ${{ github.event.repository.name }}
 jobs:
   build:
     runs-on: self-hosted
@@ -16,11 +18,7 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
-          for key in $secrets; do
-            value=$(echo $json | jq -r .[key])
-            echo "$key has value $value"
-            echo "$key=$value"
-          done
+          echo ${{ github.workspace }}
 
 #   deploy:
 #     runs-on: self-hosted
