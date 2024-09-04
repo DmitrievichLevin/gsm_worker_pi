@@ -18,8 +18,14 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
-          mv -f ${{ github.workspace }} $HOME
-          export GITHUB_WORKSPACE=$HOME/$GH_REPO
+          echo $secrets
+
+  install:
+    runs-on: self-hosted
+
+    steps:
+      - run: |
+          ln ${{ github.workspace }}/* $HOME/$GH_REPO && rm -rf ${{ github.workspace }}
 
 #   deploy:
 #     runs-on: self-hosted
