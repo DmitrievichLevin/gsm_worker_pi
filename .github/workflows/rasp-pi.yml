@@ -26,7 +26,7 @@ jobs:
             jq --arg $var1 $var2  '. += $ARGS.named' test.json > "$tmp" && mv -f "$tmp" test.json
             done
             wait
-          rm .temp.env
+          echo $(cat test.json)
 
   install:
     runs-on: self-hosted
