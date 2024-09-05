@@ -16,16 +16,15 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           file: .temp.env
       - run: |
-          secret_file=$(<.temp.env)
-          rm .temp.env
           cd ~
-          for i in $(cat $secret_file /etc/environment); do
+          for i in $(cat ${{github.workspace}}/.temp.env /etc/environment); do
             IFS=“=“ read -r var1 var2 <<< $i
             echo $var1 $var2
             tmp=$(mktemp)
             jq --arg $var1 $var2  '. += $ARGS.named' test.json > "$tmp" && mv -f "$tmp" test.json
             done
             wait
+          rm -f ${{github.workspace}}/.temp.env
           echo $(cat test.json)
 
   install:
