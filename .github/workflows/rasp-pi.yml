@@ -16,7 +16,7 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
       - run: |
           cd ~
-          printf '%s\n' "$secrets" > test.json
+          printf '%s\n' ${{ toJSON(secrets) }} > test.json
         #   for i in $(cat /etc/environment); do
         #     IFS=“=“ read -r var1 var2 <<< $i
         #     echo $var1 $var2
