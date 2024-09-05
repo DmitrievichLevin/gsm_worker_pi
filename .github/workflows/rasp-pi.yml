@@ -40,3 +40,11 @@ jobs:
           [ -e $HOME/$GH_REPO ] && rm -r $HOME/$GH_REPO
           cp -r -u ${{ github.workspace }} $HOME/
           rm -r ${{ github.workspace }}
+
+  reboot:
+    runs-on: self-hosted
+    needs: install
+    name: 'Reboot Worker'
+    steps:
+      - run: |
+          reboot
