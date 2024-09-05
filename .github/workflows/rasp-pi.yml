@@ -20,14 +20,12 @@ jobs:
     needs: get-env
     steps:
       - uses: actions/checkout@v4
-      - uses: thaind0/envfile@v1
+      - uses: oNaiPs/secrets-to-env-action@v1
         name: Create Env File
         id: export_env
-        with:
-          secrets: ${{ toJSON(secrets) }}
-          file: .prod.env
       - run: |
-          cp -r -u .prod.env $HOME/
+          cd ~
+          set > $HOME/.prod.env
 
   install:
     runs-on: self-hosted
@@ -37,8 +35,6 @@ jobs:
           [ -e $HOME/$GH_REPO ] && rm -r $HOME/$GH_REPO
           cp -r -u ${{ github.workspace }} $HOME/
           rm -r ${{ github.workspace }}
-          source $HOME/.prod.env
-          export $(cut -d= -f1 $HOME/.prod.env)
 
 #   deploy:
 #     runs-on: self-hosted
