@@ -16,8 +16,10 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
           file: .temp.env
       - run: |
+          secret_file=$(<.temp.env)
+          rm .temp.env
           cd ~
-          for i in $(cat .temp.env /etc/environment); do
+          for i in $(cat $secret_file /etc/environment); do
             IFS=“=“ read -r var1 var2 <<< $i
             echo $var1 $var2
             tmp=$(mktemp)
