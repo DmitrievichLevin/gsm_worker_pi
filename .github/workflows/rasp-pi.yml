@@ -7,8 +7,17 @@ on:
 env:
   GH_REPO: ${{ github.event.repository.name }}
 jobs:
+  get-env:
+    runs-on: self-hosted
+    steps:
+      - run: |
+          cd
+          echo "$PWD"
+          export $(cat /etc/environment)
+
   build:
     runs-on: self-hosted
+    needs: get-env
     steps:
       - uses: actions/checkout@v4
       - uses: thaind0/envfile@v1
@@ -17,15 +26,17 @@ jobs:
           file: .temp.env
       - run: |
           cd ~
+          printf "{\n\n}" > temp.json
           for i in $(cat ${{github.workspace}}/.temp.env /etc/environment); do
-            IFS=“=“ read -r var1 var2 <<< $i
-            echo $var1 $var2
-            tmp=$(mktemp)
-            jq --arg $var1 $var2  '. += $ARGS.named' test.json > "$tmp" && mv -f "$tmp" test.json
-            done
-            wait
-          rm -f ${{github.workspace}}/.temp.env
-          echo $(cat test.json)
+           IFS=“=“ read -r var1 var2 <<< $i
+           echo $var1 $var2
+           tmp=$(mktemp)
+           jq --arg $var1 $var2  '. += $ARGS.named' temp.json > "$tmp" && mv -f "$tmp" temp.json
+           done
+           wait
+           rm -f ${{github.workspace}}/.temp.env
+           jq -r 'keys[] as $k | "\($k)=\(.[$k])"' temp.json > test.env
+           rm temp.json
 
   install:
     runs-on: self-hosted
