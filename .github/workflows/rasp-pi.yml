@@ -19,13 +19,19 @@ jobs:
     runs-on: self-hosted
     needs: get-env
     steps:
+      - run: |
+          cd
+          echo "$PWD"
+          set -a
+          export $(cat /etc/environment)
+          cd ${{github.workspace}}
       - uses: actions/checkout@v4
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
       - run: |
           cd ~
-          set > $HOME/.prod.env
+          export > $HOME/.prod.env
 
   install:
     runs-on: self-hosted
