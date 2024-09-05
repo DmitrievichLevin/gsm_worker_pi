@@ -25,10 +25,14 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
       - run: |
           cd ~
-          CURRENT_ENV=$(cat /etc/environment | jq)  
-          MERGED_ENV=$(jq -s '.[0] * .[1]' $MY_SECRETS $CURRENT_ENV)
-          eval "export $(printf "%s\n" "$MERGED_ENV" | jq -r 'to_entries | map("\(.key)=\(.value)") | @sh')"
-          export > $HOME/.work1.env
+          printf '%s\n' "$secrets" > test.json
+          for i in $(cat /etc/environment); do
+            IFS=“=“ read -r var1 var2 <<< $i
+            echo $var1 $var2
+            tmp=$(mktemp)
+            jq --arg $var1 $var2  '. += $ARGS.named' test.json > "$tmp" && mv -f "$tmp" test.json
+            done
+            wait
 
   install:
     runs-on: self-hosted
