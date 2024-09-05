@@ -27,6 +27,7 @@ jobs:
            wait
            rm -f ${{github.workspace}}/.temp.env
            jq -r 'keys[] as $k | "\($k)=\(.[$k])"' temp.json > temp.env
+           chmod 644 /etc/environment
            mv -f temp.env /etc/environment
            rm -f temp.env
            rm -f temp.json
