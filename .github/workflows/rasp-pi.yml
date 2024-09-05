@@ -25,6 +25,7 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
       - run: |
           cd ~
+          set +a
           set -a
           export $(cat /etc/environment)
           eval "export $(printf "%s\n" "$MY_SECRETS" | jq -r 'to_entries | map("\(.key)=\(.value)") | @sh')"
