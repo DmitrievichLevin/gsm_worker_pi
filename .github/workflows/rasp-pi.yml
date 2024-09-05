@@ -7,17 +7,8 @@ on:
 env:
   GH_REPO: ${{ github.event.repository.name }}
 jobs:
-  get-env:
-    runs-on: self-hosted
-    steps:
-      - run: |
-          cd
-          echo "$PWD"
-          export $(cat /etc/environment)
-
   build:
     runs-on: self-hosted
-    needs: get-env
     steps:
       - uses: actions/checkout@v4
       - uses: oNaiPs/secrets-to-env-action@v1
@@ -26,13 +17,13 @@ jobs:
       - run: |
           cd ~
           printf '%s\n' "$secrets" > test.json
-          for i in $(cat /etc/environment); do
-            IFS=“=“ read -r var1 var2 <<< $i
-            echo $var1 $var2
-            tmp=$(mktemp)
-            jq --arg $var1 $var2  '. += $ARGS.named' test.json > "$tmp" && mv -f "$tmp" test.json
-            done
-            wait
+        #   for i in $(cat /etc/environment); do
+        #     IFS=“=“ read -r var1 var2 <<< $i
+        #     echo $var1 $var2
+        #     tmp=$(mktemp)
+        #     jq --arg $var1 $var2  '. += $ARGS.named' test.json > "$tmp" && mv -f "$tmp" test.json
+        #     done
+        #     wait
 
   install:
     runs-on: self-hosted
