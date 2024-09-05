@@ -1,6 +1,5 @@
 name: Deploy to Raspberry Pi Zero Worker
 
-# Controls when the workflow will run
 on:
   push:
     branches: [prod]
@@ -27,12 +26,15 @@ jobs:
            done
            wait
            rm -f ${{github.workspace}}/.temp.env
-           jq -r 'keys[] as $k | "\($k)=\(.[$k])"' temp.json > test.env
-           rm temp.json
+           jq -r 'keys[] as $k | "\($k)=\(.[$k])"' temp.json > temp.env
+           mv -f temp.env /etc/environment
+           rm -f temp.env
+           rm -f temp.json
 
   install:
     runs-on: self-hosted
     needs: build
+    name: 'Move Repo to Root'
     steps:
       - run: |
           [ -e $HOME/$GH_REPO ] && rm -r $HOME/$GH_REPO
