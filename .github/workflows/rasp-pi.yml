@@ -7,23 +7,15 @@ on:
 env:
   GH_REPO: ${{ github.event.repository.name }}
 jobs:
-  get-env:
-    runs-on: self-hosted
-    steps:
-      - run: |
-          cd
-          echo "$PWD"
-          export $(cat /etc/environment)
-
   build:
     runs-on: self-hosted
-    needs: get-env
     steps:
       - uses: actions/checkout@v4
       - uses: thaind0/envfile@v1
         with:
           secrets: ${{ toJSON(secrets) }}
           file: .temp.env
+        name: 'Build Worker Environment'
       - run: |
           cd ~
           printf "{\n\n}" > temp.json
@@ -46,19 +38,3 @@ jobs:
           [ -e $HOME/$GH_REPO ] && rm -r $HOME/$GH_REPO
           cp -r -u ${{ github.workspace }} $HOME/
           rm -r ${{ github.workspace }}
-
-#   deploy:
-#     runs-on: self-hosted
-#     needs: build
-
-#     steps:
-#       # Kill gunicorn server, if running already
-#       - name: Kill gunicorn
-#         run: pkill gunicorn || true
-
-#       # Run gunicorn server
-#       - name: Run gunicorn
-#         run: |
-#           source flask-env/bin/activate
-#           RUNNER_TRACKING_ID=""
-#           gunicorn -w 1 -b 0.0.0.0:4000 app:app -D --log-file=gunicorn.log
