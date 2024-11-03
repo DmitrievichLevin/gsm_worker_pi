@@ -18,9 +18,12 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Keys
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+
+service = Service(executable_path="../../.local/bin/chromedriver")
 
 port = 465  # For SSL
 password = "bhyd tmjq tgdf ebsc"
@@ -223,11 +226,7 @@ class XBot:
             if getattr(self, "chrome", None):
                 self.chrome.quit()
             chrome_options = webdriver.ChromeOptions()
-            # chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-            # profile_path = "/Users/howard.howard/Library/Application Support/Google/Chrome/chromeProfile"
-            # chrome_options.add_argument(
-            #     f"user-data-dir={profile_path}"
-            # )
+
             chrome_options.add_argument("disable-infobars")
             chrome_options.add_argument("--disable-extensions")
             chrome_options.add_argument("--disable-gpu")
@@ -256,7 +255,9 @@ class XBot:
                 "--remote-debugging-port=9222"
             )
 
-            driver = webdriver.Chrome(options=chrome_options)
+            driver = webdriver.Chrome(
+                service=service, options=chrome_options
+            )
             self.chrome = driver
             driver.get(HOME)
 
