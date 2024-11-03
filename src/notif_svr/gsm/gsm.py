@@ -1,12 +1,19 @@
 """Global System Mobile Communication Interface"""
-
 from __future__ import annotations
-import os
+
 import logging
-from typing import Any, TypedDict, cast, Callable
-from abc import ABCMeta, abstractmethod
+import os
 import time
-from serial import Serial, SerialException
+from abc import ABCMeta
+from abc import abstractmethod
+from typing import Any
+from typing import Callable
+from typing import cast
+from typing import TypedDict
+
+from serial import Serial
+from serial import SerialException
+
 from .sql_cursor import SQLCursor
 
 

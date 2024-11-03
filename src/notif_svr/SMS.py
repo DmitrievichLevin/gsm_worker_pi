@@ -1,15 +1,11 @@
 # #!/usr/bin/python
-
 # import serial
 # import time
-
 # ser = serial.Serial("/dev/ttyUSB2",115200)
 # ser.flushInput()
-
 # phone_number = '10010' #********** change it to the phone number you want to call
 # text_message = '101'
 # rec_buff = ''
-
 # def send_at(command,back,timeout):
 # 	rec_buff = ''
 # 	ser.write((command+'\r\n').encode())
@@ -24,9 +20,7 @@
 # 	else:
 # 		print(rec_buff.decode())
 # 		return 1
-
 # def SendShortMessage(phone_number,text_message):
-
 # 	print("Setting SMS mode...")
 # 	send_at("AT+CMGF=1","OK",1)
 # 	print("Sending Short Message")
@@ -41,7 +35,6 @@
 # 			print('error')
 # 	else:
 # 		print('error%d'%answer)
-
 # def ReceiveShortMessage():
 # 	rec_buff = ''
 # 	print('Setting SMS mode...')
@@ -57,7 +50,6 @@
 # 		print('error%d'%answer)
 # 		return False
 # 	return True
-
 # try:
 # 	print('Sending Short Message Test:')
 # 	SendShortMessage(phone_number,text_message)

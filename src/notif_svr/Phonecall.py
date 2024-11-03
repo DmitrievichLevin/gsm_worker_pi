@@ -1,13 +1,11 @@
+"""Phone Call Example"""
 # #!/usr/bin/python
-
 # import serial
 # import time
 # ser = serial.Serial("/dev/ttyUSB2",115200)
 # #ser.flushInput()
-
 # phone_number = '10010'
 # rec_buff = ''
-
 # def send_at(command,back,timeout):
 #         rec_buff = ''
 #         ser.write((command+'\r\n').encode())
@@ -22,7 +20,6 @@
 #         else:
 #                 print(rec_buff.decode())
 #                 return 1
-
 # try:
 #  while True:
 #         send_at('AT+CSQ','OK',1)

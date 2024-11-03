@@ -1,7 +1,9 @@
 """SQL Cursor Module."""
-
 import os
-from typing import Any, Callable, TypedDict
+from typing import Any
+from typing import Callable
+from typing import TypedDict
+
 import pymssql
 
 

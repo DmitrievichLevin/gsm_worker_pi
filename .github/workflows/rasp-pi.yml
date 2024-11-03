@@ -13,23 +13,10 @@ jobs:
       - uses: thaind0/envfile@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-          file: .temp.env
+          file: .prod.env
         name: 'Build Worker Environment'
       - run: |
-          cd ~
-          printf "{\n\n}" > temp.json
-          for i in $(cat ${{github.workspace}}/.temp.env /etc/environment); do
-           IFS=“=“ read -r var1 var2 <<< $i
-           echo $var1 $var2
-           tmp=$(mktemp)
-           jq --arg $var1 $var2  '. += $ARGS.named' temp.json > "$tmp" && mv -f "$tmp" temp.json
-           done
-           wait
-           rm -f ${{github.workspace}}/.temp.env
-           jq -r 'keys[] as $k | "\($k)=\(.[$k])"' temp.json > temp.env
-           mv -f temp.env /etc/environment
-           rm -f temp.env
-           rm -f temp.json
+          mv .prod.env $HOME/.prod.env
 
   install:
     runs-on: self-hosted

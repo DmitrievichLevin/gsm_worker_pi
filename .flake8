@@ -4,6 +4,6 @@ ignore = E203,E501,RST201,RST203,RST301,W503,D415,D107,DAR101,D107,D417,B010
 max-line-length = 150
 max-complexity = 10
 docstring-convention = google
-exclude=src/sql,noxfile.py,.github,tests/*
+exclude=src/sql,noxfile.py,.github,tests/*,src/notif_svr/*
 rst-roles = class,const,func,meth,mod,ref
 rst-directives = deprecated
