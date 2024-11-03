@@ -14,16 +14,16 @@ from pathlib import Path
 from typing import Any
 from typing import Callable
 
+import geckodriver_autoinstaller  # import Geckodriver into your program
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Keys
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-service = Service(executable_path="../../.local/bin/chromedriver")
+geckodriver_autoinstaller.install()
 
 port = 465  # For SSL
 password = "bhyd tmjq tgdf ebsc"
@@ -162,7 +162,7 @@ class LocalUnixDict:
 
 
 class XBot:
-    chrome: webdriver.Chrome
+    chrome: webdriver.Firefox
     cache: LocalUnixDict
 
     def __init__(self, users: list[str]) -> None:
@@ -217,7 +217,7 @@ class XBot:
         """Create Headless Chrome
 
         Returns:
-            webdriver.Chrome: Headless Chrome Driver
+            webdriver.Firefox: Headless Chrome Driver
 
         Raises:
             e: Error starting chrome
@@ -225,7 +225,7 @@ class XBot:
         try:
             if getattr(self, "chrome", None):
                 self.chrome.quit()
-            chrome_options = webdriver.ChromeOptions()
+            chrome_options = webdriver.FirefoxOptions()
 
             chrome_options.add_argument("disable-infobars")
             chrome_options.add_argument("--disable-extensions")
@@ -255,7 +255,7 @@ class XBot:
                 "--remote-debugging-port=9222"
             )
 
-            driver = webdriver.Chrome(
+            driver = webdriver.Firefox(
                 service=service, options=chrome_options
             )
             self.chrome = driver
@@ -514,7 +514,7 @@ class XBot:
                     else PRODUCT_IMG_PATH
                 )
 
-                def find_upload(d: webdriver.Chrome) -> bool:
+                def find_upload(d: webdriver.Firefox) -> bool:
                     imgs = d.find_elements(By.TAG_NAME, "img")
                     for i in imgs:
                         img_src = i.get_attribute("src") or ""
