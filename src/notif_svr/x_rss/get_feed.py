@@ -5,7 +5,10 @@ import logging
 import os
 import pickle
 import re
+import smtplib
 import time
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from functools import reduce
 from pathlib import Path
 from typing import Any
@@ -19,7 +22,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-os.environ.update(ENV="development")
+port = 465  # For SSL
+password = "bhyd tmjq tgdf ebsc"
+sender_email = "noreply@myleft.org"
+
+os.environ.update(ENV="production")
 os.environ.update(AUTH_COOKIE=os.getcwd() + "/auth_cookie")
 os.environ.update(VISITED_HASH_PATH=os.getcwd() + "/_visited.json")
 os.environ.update(
@@ -52,6 +59,42 @@ def time_to_string(_time: float | int) -> str:
 
     # Format the datetime object into a string
     return datetime_object.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def send_report(success: list[tuple[str, str]]) -> None:
+    """Send order confirmation email
+
+    Args:
+        order (dict[str, Any]): order
+        line_items (list[dict[str, Any]]): line items.
+    """
+    receiver_email = "jalin.howard@gmail.com"
+    message = MIMEMultipart("alternative")
+    message["Subject"] = "XBot Success Report"
+    message["From"] = sender_email
+    message["To"] = receiver_email
+
+    # Turn these into plain/html MIMEText objects
+    part1 = MIMEText(message["Subject"], "plain")
+    part2 = MIMEText(
+        f"""/
+        <div>
+        {''.join(['<p>https://www.x.com/%s/status/%s</p>' % (u,i) for u,i in success])}
+        </div>
+        """,
+        "html",
+    )
+
+    # Add HTML/plain-text parts to MIMEMultipart message
+    # The email client will try to render the last part first
+    message.attach(part1)
+    message.attach(part2)
+
+    server = smtplib.SMTP_SSL("smtp.gmail.com")
+    server.login(sender_email, password)
+    server.ehlo()
+    server.sendmail(sender_email, receiver_email, message.as_string())
+    server.close()
 
 
 class LocalUnixDict:
@@ -88,9 +131,7 @@ class LocalUnixDict:
 
         _exists = True if self.hash.get(_id, False) else False
 
-        if (
-            not _exists and _time > self.epoch
-        ) or _id == "1852229306933526785":
+        if not _exists and _time > self.epoch:
             try:
                 if callback:
                     callback()
@@ -101,11 +142,19 @@ class LocalUnixDict:
                     "Write Callback failed. Aborting cache write..."
                 )
         elif _exists:
-            print("Reply id:%s exists" % _id)
+
+            logging.debug("Reply id:%s exists", _id)
+            raise Exception(  # pylint: disable=broad-exception-raised
+                "Reply exists."
+            )
         else:
-            print(
-                "Reply id:%s\ndate:%s is too far in past"
-                % (_id, time_to_string(_time))
+            logging.debug(
+                "Reply id:%s\ndate:%s is too far in past",
+                _id,
+                time_to_string(_time),
+            )
+            raise Exception(  # pylint: disable=broad-exception-raised
+                "Reply in the past."
             )
 
 
@@ -125,11 +174,10 @@ class XBot:
         for u in users:
             tweets_tdy += self.get_recent(u)
 
-        print("recent tweets", tweets_tdy)
-
         # Reload chrome window
-        self.chrome.quit()
         self.__open_chrome()
+
+        success_report = []
 
         # Post reply to all recent tweets
         for tw, tt in tweets_tdy:
@@ -145,9 +193,12 @@ class XBot:
                     status_id,
                     tt,
                     lambda: self.__post_reply(
-                        user, status_id, "Hello World!"
+                        user,
+                        status_id,
+                        "Kamala Sues MyLeft.org over AI generated image!",
                     ),
                 )
+                success_report.append((user, status_id))
             except Exception:
                 logging.debug(
                     "Failed to post reply user: %s\nid: %s\n time: %s",
@@ -155,6 +206,9 @@ class XBot:
                     status_id,
                     time_to_string(tt),
                 )
+
+        self.chrome.quit()
+        send_report(success_report)
 
     def __open_chrome(self) -> None:
         """Create Headless Chrome
@@ -166,6 +220,8 @@ class XBot:
             e: Error starting chrome
         """
         try:
+            if getattr(self, "chrome", None):
+                self.chrome.quit()
             chrome_options = webdriver.ChromeOptions()
             chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
             # profile_path = "/Users/howard.howard/Library/Application Support/Google/Chrome/chromeProfile"
@@ -220,7 +276,7 @@ class XBot:
                 )
                 self.__login()
             except TimeoutException:
-                print("Logged in successfully.")
+                logging.debug("Logged in successfully.")
                 self.__save_auth()
 
         except Exception as e:
@@ -252,7 +308,7 @@ class XBot:
             with open(AUTH_COOKIE, "wb+") as filehandler:
                 pickle.dump(cookies, filehandler)
         except TimeoutException:
-            print("Driver timed out saving auth_token.")
+            logging.debug("Driver timed out saving auth_token.")
             raise TimeoutException(
                 "Driver timed out saving auth_token."
             )
@@ -305,7 +361,7 @@ class XBot:
         Returns:
             _type_: _description_
         """
-
+        self.__open_chrome()
         with self.chrome as browser:
             browser.get("https://x.com/%s" % (user))
 
@@ -331,7 +387,7 @@ class XBot:
                     )
                 )
             except TimeoutException:
-                print(
+                logging.debug(
                     "Page load timeout, while getting recent tweets."
                 )
                 raise TimeoutException(
@@ -422,7 +478,7 @@ class XBot:
                     )
                 )
             except TimeoutException:
-                print(
+                logging.debug(
                     "Page load timeout, while getting posting reply."
                 )
                 raise TimeoutException(
@@ -441,7 +497,11 @@ class XBot:
                     By.XPATH, "//div[@data-testid='tweetTextarea_0']"
                 )
 
-                text_area.send_keys(body)
+                text_area.send_keys(
+                    body
+                    if user != "elonmusk"
+                    else "Hey Elon,\nLaid off engineer in the Kamaleconomy, help me sell 1000 cans of Cashews from the great red state of Oklahoma! https://www.myleft.org"
+                )
 
                 file_input = browser.find_element(
                     By.XPATH, "//input[@type='file']"
@@ -449,13 +509,15 @@ class XBot:
 
                 file_input.send_keys(
                     CLICK_BAIT_PATH + "\n" + PRODUCT_IMG_PATH
+                    if user != "elonmusk"
+                    else PRODUCT_IMG_PATH
                 )
 
                 def find_upload(d: webdriver.Chrome) -> bool:
                     imgs = d.find_elements(By.TAG_NAME, "img")
                     for i in imgs:
                         img_src = i.get_attribute("src") or ""
-                        print("checking src", img_src)
+
                         if re.match(r"^blob:.+", img_src) is not None:
                             return True
                     return False
@@ -471,10 +533,13 @@ class XBot:
 
                     send_button.click()
 
-                    self.chrome.implicitly_wait(5)
+                    time.sleep(5)
+                    logging.debug(
+                        "Posted reply %s/%s", user, status_id
+                    )
                 except TimeoutException:
                     e_msg = "Failed to attach media."
-                    print(e_msg)
+                    logging.debug(e_msg)
                     raise TimeoutException(e_msg)
 
             except Exception as e:
@@ -488,3 +553,27 @@ class XBot:
 
 
 x = XBot(["myleftsnuts"])
+#     [
+#         "elonmusk",
+#         "DonaldTNews",
+#         "GOP",
+#         "nbcsnl",
+#         "AB84",
+#         "DonaldJTrumpJr",
+#         "JDVance",
+#         "mayemusk",
+#         "KamalaHarris",
+#         "alexandrosM",
+#         "RepMTG",
+#         "laurenboebert",
+#         "benshapiro",
+#         "SenTedCruz",
+#         "joerogan",
+#         "RealCandaceO",
+#         "realDonaldTrump",
+#         "TeamTrump",
+#         "stclairashley",
+#         "iamcardib",
+#         "itsdeaann",
+#     ]
+# )
