@@ -238,9 +238,9 @@ class XBot:
                     "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
                 )
             chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_experimental_option(
-                "excludeSwitches", ["enable-automation"]
-            )
+            # chrome_options.add_experimental_option(
+            #     "excludeSwitches", ["enable-automation"]
+            # )
 
             # Disable password manager
             prefs = {
@@ -248,16 +248,14 @@ class XBot:
                 "profile.password_manager_enabled": False,
             }
 
-            chrome_options.add_experimental_option("prefs", prefs)
+            # chrome_options.add_experimental_option("prefs", prefs)
 
             # Remote debugging to prevent Chrome from detecting automation
             chrome_options.add_argument(
                 "--remote-debugging-port=9222"
             )
 
-            driver = webdriver.Firefox(
-                service=service, options=chrome_options
-            )
+            driver = webdriver.Firefox(options=chrome_options)
             self.chrome = driver
             driver.get(HOME)
 
