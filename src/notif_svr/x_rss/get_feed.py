@@ -223,7 +223,7 @@ class XBot:
             if getattr(self, "chrome", None):
                 self.chrome.quit()
             chrome_options = webdriver.ChromeOptions()
-            chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+            # chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
             # profile_path = "/Users/howard.howard/Library/Application Support/Google/Chrome/chromeProfile"
             # chrome_options.add_argument(
             #     f"user-data-dir={profile_path}"
